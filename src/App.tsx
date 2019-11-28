@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard'
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={'info-vis-project'}>
             <PageWrapper>
                 <Dashboard />
             </PageWrapper>

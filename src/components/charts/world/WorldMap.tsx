@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 import { d3Path } from '../../../utils/d3'
 import styled from 'styled-components'
 import { Row, Col } from 'antd'
+import { url } from '../../../utils/router'
 
 interface IWorldMap {
     // TODO: Correct typing
@@ -67,7 +68,7 @@ export const WorldMap = (props: IWorldMap) => {
                 const svg = d3.select(d3Container.current)
                 const path = d3Path(width, height)
 
-                const res = d3.json('/assets/custom.geo.json')
+                const res = d3.json(url('/assets/custom.geo.json'))
                     .then(json => {
                         //Bind data and create one path per GeoJSON feature
                         const countriesGroup = svg.append("g").attr("id", "map")
@@ -126,7 +127,7 @@ export const WorldMap = (props: IWorldMap) => {
             <Col md={10}>
                 {selected && <div>
                     <h1>{selected.properties.name}</h1>
-                    <pre>{JSON.stringify(selected, null, 2)}</pre>
+                    <pre>{JSON.stringify(selected.properties, null, 2)}</pre>
                 </div>}
             </Col>
         </Row>

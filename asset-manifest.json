@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/info-vis-project/static/css/main.37fa82b1.chunk.css",
-    "main.js": "/info-vis-project/static/js/main.a59f2b8d.chunk.js",
-    "main.js.map": "/info-vis-project/static/js/main.a59f2b8d.chunk.js.map",
+    "main.js": "/info-vis-project/static/js/main.e6a727ff.chunk.js",
+    "main.js.map": "/info-vis-project/static/js/main.e6a727ff.chunk.js.map",
     "runtime-main.js": "/info-vis-project/static/js/runtime-main.34c0296b.js",
     "runtime-main.js.map": "/info-vis-project/static/js/runtime-main.34c0296b.js.map",
     "static/css/2.f7f97c6b.chunk.css": "/info-vis-project/static/css/2.f7f97c6b.chunk.css",
     "static/js/2.f22305eb.chunk.js": "/info-vis-project/static/js/2.f22305eb.chunk.js",
     "static/js/2.f22305eb.chunk.js.map": "/info-vis-project/static/js/2.f22305eb.chunk.js.map",
     "index.html": "/info-vis-project/index.html",
-    "precache-manifest.a3f612e12434e59109e51812f149a85b.js": "/info-vis-project/precache-manifest.a3f612e12434e59109e51812f149a85b.js",
+    "precache-manifest.236080199c6eb067c0afc5dbe64f613a.js": "/info-vis-project/precache-manifest.236080199c6eb067c0afc5dbe64f613a.js",
     "service-worker.js": "/info-vis-project/service-worker.js",
     "static/css/2.f7f97c6b.chunk.css.map": "/info-vis-project/static/css/2.f7f97c6b.chunk.css.map",
     "static/css/main.37fa82b1.chunk.css.map": "/info-vis-project/static/css/main.37fa82b1.chunk.css.map"
@@ -19,6 +19,6 @@
     "static/css/2.f7f97c6b.chunk.css",
     "static/js/2.f22305eb.chunk.js",
     "static/css/main.37fa82b1.chunk.css",
-    "static/js/main.a59f2b8d.chunk.js"
+    "static/js/main.e6a727ff.chunk.js"
   ]
 }

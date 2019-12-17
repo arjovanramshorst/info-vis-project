@@ -11,13 +11,8 @@ class Dashboard extends React.Component<IDashboard> {
     render() {
         const {} = this.props
 
-        return <PageHeader
-            title="Dashboard for InfoVis Project"
-            subTitle="Some dataset description"
-        >
-            <WorldMap data={[1,2,3]} />
-
-        </PageHeader>
+        return null
+        // return <WorldMap data={[1,2,3]} />
     }
 }
 

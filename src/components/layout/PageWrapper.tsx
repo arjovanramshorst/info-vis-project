@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { Col, Layout, Menu, Row } from 'antd'
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
+import SlideshowSteps from './SlideshowSteps'
+import WorldMap, { ICountry } from '../charts/world/WorldMap'
+import { useRef, useState } from 'react'
 
 interface IPageWrapper {
 }
@@ -35,39 +38,33 @@ const StyledContentContainer = styled.div`
     min-height: calc(100vh - 64px /*header*/ - 84px /*footer*/ - 100px /*padding*/);
 `
 
-class PageWrapper extends React.Component<IPageWrapper & RouteComponentProps> {
-    render() {
-        const { location } = this.props
+const PageWrapper = () => {
 
-        return (
-            <Layout>
-                <Layout.Header className="header">
-                    <Row type="flex">
-                        <Col>
-                            <Menu
-                                selectedKeys={[location.pathname]}
-                                theme="dark"
-                                mode="horizontal"
-                                style={{ lineHeight: '64px' }}
-                            >
-                                <MenuItem to={'/'}>
-                                    Dashboard
-                                </MenuItem>
-                            </Menu>
-                        </Col>
-                    </Row>
-                </Layout.Header>
-                <StyledLayoutContent>
-                    <StyledContentContainer>
-                        {this.props.children}
-                    </StyledContentContainer>
-                </StyledLayoutContent>
-                <Layout.Footer style={{ textAlign: 'center' }}>
-                    <p>InfoVis 2019 Q2 (Group 25)</p>
-                </Layout.Footer>
-            </Layout>
-        )
-    }
+    const [country, setCountry] = useState(null as ICountry | null)
+
+    return (
+        <Layout>
+            <SlideshowSteps />
+            <Row >
+                <Col md={12} >
+                    <WorldMap
+                        data={[]}
+                        selected={country}
+                        setSelected={setCountry}
+                    />
+                </Col>
+                <Col md={12}>
+                    <StyledLayoutContent>
+                        <StyledContentContainer>
+                            <h1>Test</h1>
+                            <p>Test</p>
+                        </StyledContentContainer>
+
+                    </StyledLayoutContent>
+                </Col>
+            </Row>
+        </Layout>
+    )
 }
 
 export default withRouter(PageWrapper)

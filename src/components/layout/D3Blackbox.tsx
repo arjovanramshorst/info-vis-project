@@ -3,12 +3,12 @@ import { useEffect, useLayoutEffect, useState } from 'react'
 import * as d3 from 'd3'
 
 interface ID3Blackbox {
-    x: number,
-    y: number,
-    data: any,
-    width: number,
-    height: number,
-    init: (svg: any, setElement: (key: string, value: any) => void) => void,
+    x: number
+    y: number
+    data: any
+    width: number
+    height: number
+    init: (svg: any, setElement: (key: string, value: any) => void) => void
     render: (svg: any, data: any, elements: Record<string, any>) => void
 }
 

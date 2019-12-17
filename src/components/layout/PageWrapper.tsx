@@ -6,8 +6,7 @@ import SlideshowSteps from './SlideshowSteps'
 import WorldMap, { ICountry } from '../charts/world/WorldMap'
 import { useRef, useState } from 'react'
 
-interface IPageWrapper {
-}
+interface IPageWrapper {}
 
 interface IMenuItemProps {
     onClick?: (param: any | undefined) => void
@@ -39,19 +38,14 @@ const StyledContentContainer = styled.div`
 `
 
 const PageWrapper = () => {
-
     const [country, setCountry] = useState(null as ICountry | null)
 
     return (
         <Layout>
             <SlideshowSteps />
-            <Row >
-                <Col md={12} >
-                    <WorldMap
-                        data={[]}
-                        selected={country}
-                        setSelected={setCountry}
-                    />
+            <Row>
+                <Col md={12}>
+                    <WorldMap data={[]} selected={country} setSelected={setCountry} />
                 </Col>
                 <Col md={12}>
                     <StyledLayoutContent>
@@ -59,7 +53,6 @@ const PageWrapper = () => {
                             <h1>Test</h1>
                             <p>Test</p>
                         </StyledContentContainer>
-
                     </StyledLayoutContent>
                 </Col>
             </Row>

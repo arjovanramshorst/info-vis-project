@@ -23,18 +23,17 @@ const StyledMap = styled.div`
     }
 
     .country {
-        fill: #4B5358; /* country colour */
-        stroke: #2A2C39; /* country border colour */
+        fill: #4b5358; /* country colour */
+        stroke: #2a2c39; /* country border colour */
         stroke-width: 1; /* country border width */
         cursor: pointer;
-        
+
         &.country-selected {
             fill: #ff0000; /* country colour */
         }
     }
     .country:hover {
         fill: #ffffff; /* country colour */
-       
     }
 
     .countryLabel {
@@ -42,11 +41,11 @@ const StyledMap = styled.div`
     }
 
     .countryName {
-        fill: #FFFAFF; /* country label text colour */
+        fill: #fffaff; /* country label text colour */
     }
 
     .countryLabelBg {
-        fill: #30BCED; /* country label background colour */
+        fill: #30bced; /* country label background colour */
     }
 `
 
@@ -84,25 +83,28 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
     useEffect(() => {
         // Load initial data
         if (!geoData) {
-            d3.json(url('/assets/custom.geo.json'))
-                .then(json => {
-                    setGeoData(json)
-                })
+            d3.json(url('/assets/custom.geo.json')).then(json => {
+                setGeoData(json)
+            })
         }
-    }, )
+    })
 
     useEffect(() => {
         // Update selected
         if (geoData) {
             setGeoData({
                 ...geoData,
-                features: geoData.features.map((d: ICountry) => (selected && d.properties.iso_a3 === selected.properties.iso_a3) ? {
-                    ...d,
-                    selected: true,
-                } : {
-                    ...d,
-                    selected: false,
-                }),
+                features: geoData.features.map((d: ICountry) =>
+                    selected && d.properties.iso_a3 === selected.properties.iso_a3
+                        ? {
+                              ...d,
+                              selected: true,
+                          }
+                        : {
+                              ...d,
+                              selected: false,
+                          },
+                ),
             })
         }
     }, [selected])
@@ -120,17 +122,15 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
                         init={(svg, setElement) => {
                             setElement('path', d3Path(width, height))
 
-                            const countriesGroup = svg
-                                .append("g")
-                                .attr("id", "map")
+                            const countriesGroup = svg.append('g').attr('id', 'map')
 
                             // add a background rectangle
                             countriesGroup
-                                .append("rect")
-                                .attr("x", 0)
-                                .attr("y", 0)
-                                .attr("width", width)
-                                .attr("height", height)
+                                .append('rect')
+                                .attr('x', 0)
+                                .attr('y', 0)
+                                .attr('width', width)
+                                .attr('height', height)
 
                             setElement('countriesGroup', countriesGroup)
                         }}
@@ -139,35 +139,28 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
                                 return
                             }
 
-                            countriesGroup
-                                .attr("width", width)
-                                .attr("height", height)
+                            countriesGroup.attr('width', width).attr('height', height)
 
                             // draw a path for each feature/country
-                            const countries = countriesGroup
-                                .selectAll("path")
-                                .data(data.features)
+                            const countries = countriesGroup.selectAll('path').data(data.features)
 
-                            countries
-                                .enter()
-                                .append("path")
+                            countries.enter().append('path')
                             // @ts-ignore
 
-                            countries
-                                .exit()
-                                .remove()
+                            countries.exit().remove()
 
                             const path = d3Path(width, height)
 
                             countries
-                                .attr("d", path)
-                                .attr("class", (d: ICountry, i: any) => d.selected
-                                    ? 'country country-selected'
-                                    : 'country',
-                                ).on("click", (d: ICountry, i: any) => {
+                                .attr('d', path)
+                                .attr('class', (d: ICountry, i: any) =>
+                                    d.selected ? 'country country-selected' : 'country',
+                                )
+                                .on('click', (d: ICountry, i: any) => {
                                     setSelected(d)
                                 })
-                        }} />
+                        }}
+                    />
                 </StyledMap>
             </Col>
         </Row>
@@ -175,4 +168,3 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
 }
 
 export default WorldMap
-

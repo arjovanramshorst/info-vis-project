@@ -15,11 +15,7 @@ const SlideshowSteps = ({}) => {
 
     return (
         <StyledStepsContainer>
-            <Steps
-                progressDot
-                current={step}
-                onChange={setStep}
-            >
+            <Steps progressDot current={step} onChange={setStep}>
                 <Step title="The gender gap in the EU" description="" />
                 <Step title="We are on our way, but slowly" description="" />
                 <Step title="Some countries are already doing great" description="" />

@@ -2,12 +2,9 @@ import * as React from 'react'
 import { PageHeader } from 'antd'
 import WorldMap from '../components/charts/world/WorldMap'
 
-interface IDashboard {
-
-}
+interface IDashboard {}
 
 class Dashboard extends React.Component<IDashboard> {
-
     render() {
         const {} = this.props
 

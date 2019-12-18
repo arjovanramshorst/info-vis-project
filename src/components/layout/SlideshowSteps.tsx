@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useState, useEffect } from 'react'
 import { Divider, Steps } from 'antd'
 import styled from 'styled-components'
 
@@ -10,16 +9,14 @@ const StyledStepsContainer = styled.div`
     padding: 25px 25px 0 25px;
 `
 
-const SlideshowSteps = (props: any) => {
-    const [step, setStep] = useState(0)
+interface ISlideShowSteps {
+    step: number
+    setStep: (step: number) => void
+}
 
-    useEffect(() => {
-        setStep(props.number);
-    }, [props.number]);
-    
+const SlideshowSteps = ({ step, setStep }: ISlideShowSteps) => {
     return (
         <StyledStepsContainer>
-            
             <Steps progressDot current={step} onChange={setStep}>
                 <Step title="The gender gap in the EU" description="" />
                 <Step title="We are on our way, but slowly" description="" />

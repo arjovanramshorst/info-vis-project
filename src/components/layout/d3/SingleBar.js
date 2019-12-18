@@ -1,30 +1,29 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./barChart.css";
+import React from 'react'
+import './barChart.css'
 
 function SingleBar({ width, height, data, color, percentage }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}
-    >
-      <svg style={{ marginLeft: 5 }} width={width} height={height}>
-        <path
-          style={{
-            animation: "bounce linear 1000ms",
-            transformOrigin: "50% 100%",
-            margin: "auto"
-          }}
-          d={data}
-          fill={color}
-        />
-      </svg>
-      <p style={{ fontSize: 12 }}>{percentage}</p>
-    </div>
-  );
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <svg style={{ marginLeft: 5 }} width={width} height={height}>
+                <path
+                    style={{
+                        animation: 'bounce linear 1000ms',
+                        transformOrigin: '50% 100%',
+                        margin: 'auto',
+                    }}
+                    d={data}
+                    fill={color}
+                />
+            </svg>
+            <p style={{ fontSize: 12 }}>{percentage}</p>
+        </div>
+    )
 }
 
-export default SingleBar;
+export default SingleBar

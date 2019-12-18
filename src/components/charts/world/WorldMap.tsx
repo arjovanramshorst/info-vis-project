@@ -6,6 +6,7 @@ import * as d3 from 'd3'
 import { url } from '../../../utils/router'
 import { d3Path } from '../../../utils/d3'
 import D3Blackbox from '../../layout/D3Blackbox'
+import { genderEqualityData } from '../../../data/dataset'
 
 interface IWorldMap {
     // TODO: Correct typing
@@ -17,7 +18,7 @@ interface IWorldMap {
 const StyledMap = styled.div`
     height: calc(100vh - 140px);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    
+
     svg rect {
         fill: #ffffff; /* map background colour */
         //stroke: #2A2C39; /* map border colour */
@@ -28,14 +29,17 @@ const StyledMap = styled.div`
         fill: #4b5358; /* country colour */
         stroke: #2a2c39; /* country border colour */
         stroke-width: 1; /* country border width */
-        cursor: pointer;
+        &.selectable {
+            fill: rgba(0,0,0,0.30);
+            cursor: pointer;
+            &:hover {
+                fill: #ffffff; /* hover colour */
+            }
+        }
 
         &.country-selected {
             fill: #ff0000; /* country colour */
         }
-    }
-    .country:hover {
-        fill: #ffffff; /* country colour */
     }
 
     .countryLabel {
@@ -54,6 +58,7 @@ const StyledMap = styled.div`
 export interface ICountry {
     properties: Record<string, string>
     selected?: boolean
+    equalityData: any
 }
 
 export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) => {
@@ -84,12 +89,20 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
 
     useEffect(() => {
         // Load initial data
-        if (!geoData) {
-            d3.json(url('/assets/custom.geo.json')).then(json => {
-                setGeoData(json)
+        d3.json(url('/assets/custom.geo.json')).then(json => {
+            const mergedFeatures = json.features.map((feature: any) => {
+                const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
+                if (genderEqualityData[countryKey]) {
+                    return {
+                        ...feature,
+                        equalityData: genderEqualityData[countryKey],
+                    }
+                }
+                return feature
             })
-        }
-    })
+            setGeoData({ features: mergedFeatures })
+        })
+    }, [])
 
     useEffect(() => {
         // Update selected
@@ -155,11 +168,17 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
 
                             countries
                                 .attr('d', path)
-                                .attr('class', (d: ICountry, i: any) =>
-                                    d.selected ? 'country country-selected' : 'country',
+                                .attr(
+                                    'class',
+                                    (d: ICountry, i: any) =>
+                                        `country ${d.selected ? 'country-selected' : ''} ${
+                                            d.equalityData ? 'selectable' : ''
+                                        }`,
                                 )
                                 .on('click', (d: ICountry, i: any) => {
-                                    setSelected(d)
+                                    if (d.equalityData) {
+                                        setSelected(d)
+                                    }
                                 })
                         }}
                     />

@@ -20,7 +20,7 @@ const StyledMap = styled.div`
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     svg rect {
-        fill: #ffffff; /* map background colour */
+        fill: #f0f2f5; /* map background colour */
         //stroke: #2A2C39; /* map border colour */
         //stroke-width: 1; /* map border width */
     }
@@ -90,19 +90,21 @@ export const WorldMap = ({ selected, setSelected, data, ...props }: IWorldMap) =
     useEffect(() => {
         // Load initial data
         d3.json(url('/assets/custom.geo.json')).then(json => {
-            const mergedFeatures = json.features.map((feature: any) => {
-                const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
-                if (genderEqualityData[countryKey]) {
-                    return {
-                        ...feature,
-                        equalityData: genderEqualityData[countryKey],
+            if (!geoData) {
+                const mergedFeatures = json.features.map((feature: any) => {
+                    const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
+                    if (genderEqualityData[countryKey]) {
+                        return {
+                            ...feature,
+                            equalityData: genderEqualityData[countryKey],
+                        }
                     }
-                }
-                return feature
-            })
-            setGeoData({ features: mergedFeatures })
+                    return feature
+                })
+                setGeoData({ features: mergedFeatures })
+            }
         })
-    }, [])
+    })
 
     useEffect(() => {
         // Update selected

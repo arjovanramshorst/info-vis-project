@@ -18,6 +18,7 @@ const D3Blackbox = ({ x, y, data, width, height, init, render }: ID3Blackbox) =>
     const [elements, setElements] = useState({})
 
     useLayoutEffect(() => {
+        // Initialize elements
         const elements = {} as Record<string, any>
         init(d3.select(refAnchor.current), (key: string, value: any) => {
             elements[key] = value
@@ -27,6 +28,7 @@ const D3Blackbox = ({ x, y, data, width, height, init, render }: ID3Blackbox) =>
     }, [])
 
     useEffect(() => {
+        // Update elements
         if (elements && data) {
             render(d3.select(refAnchor.current), data, elements)
         }

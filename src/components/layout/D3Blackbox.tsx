@@ -10,9 +10,10 @@ interface ID3Blackbox {
     height: number
     init: (svg: any, setElement: (key: string, value: any) => void) => void
     render: (svg: any, data: any, elements: Record<string, any>) => void
+    dependsOn?: any[]
 }
 
-const D3Blackbox = ({ x, y, data, width, height, init, render }: ID3Blackbox) => {
+const D3Blackbox = ({ x, y, data, width, height, init, render, dependsOn = [] }: ID3Blackbox) => {
     const refAnchor = React.useRef(null)
 
     const [elements, setElements] = useState({})
@@ -32,7 +33,7 @@ const D3Blackbox = ({ x, y, data, width, height, init, render }: ID3Blackbox) =>
         if (elements && data) {
             render(d3.select(refAnchor.current), data, elements)
         }
-    }, [elements, data, width, height])
+    }, [elements, data, width, height, ...dependsOn])
 
     return <svg ref={refAnchor} style={{ width, height }} transform={`translate(${x}, ${y})`} />
 }

@@ -8,6 +8,9 @@ import WorldMap, { ICountry } from '../charts/world/WorldMap'
 import LineChart from './d3/LineChart'
 import { randomData } from './d3/randomData'
 import SingleBar from './d3/SingleBar'
+import { GenderEqualityFeature, GenderEqualityYear } from '../../data/dataset'
+import YearSlider from './components/YearSlider'
+import FeatureSelect from './components/FeatureSelect'
 
 const StyledLayoutContent = styled(Layout.Content)`
     padding: 50px;
@@ -31,10 +34,12 @@ const max = 300
 
 const PageWrapper = () => {
     const [country, setCountry] = useState(null as ICountry | null)
-    const second = true
     const [slide, setSlide] = useState(0)
     const [slideTransition, setSlideTransition] = useState(false)
     const [slideData, setSlideData] = useState(randomData[0])
+
+    const [feature, setFeature] = useState('gender_equality_index' as GenderEqualityFeature)
+    const [year, setYear] = useState('2005' as GenderEqualityYear)
 
     const graphColorSelect = ['blue', '#F44336']
     const boxShadow = [
@@ -46,9 +51,9 @@ const PageWrapper = () => {
 
     return (
         <div>
-            <Layout>
+            <Layout style={{backgroundColor: 'white'}}>
                 <SlideshowSteps step={slide} setStep={setSlide} />
-                <Row>
+                <Row type="flex" align="middle">
                     <Col md={1}>
                         <StyledArrow
                             onClick={() => {
@@ -186,16 +191,17 @@ const PageWrapper = () => {
                                                 >
                                                     <Col md={12}>
                                                         <WorldMap
-                                                            data={[]}
                                                             selected={country}
                                                             setSelected={setCountry}
+                                                            selectedFeature={feature}
+                                                            selectedYear={year}
                                                         />
                                                     </Col>
                                                     <Col md={12}>
                                                         <StyledLayoutContent>
                                                             <StyledContentContainer>
-                                                                <h1>Test</h1>
-                                                                <p>Test</p>
+                                                                <YearSlider year={year} setYear={setYear} />
+                                                                <FeatureSelect feature={feature} setFeature={setFeature} />
                                                             </StyledContentContainer>
                                                         </StyledLayoutContent>
                                                     </Col>

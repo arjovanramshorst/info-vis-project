@@ -21,7 +21,8 @@ interface IWorldMap {
 }
 
 const StyledMap = styled.div`
-    height: calc(100vh - 140px);
+    height: calc(100vh - 152px);
+    margin-bottom: 12px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     svg rect {

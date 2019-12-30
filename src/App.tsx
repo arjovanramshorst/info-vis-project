@@ -21,7 +21,7 @@ const TransitionWrapper: React.FC<RouteComponentProps> = ({ location, children }
 
 const RouterTransitionWrapper = withRouter(TransitionWrapper)
 
-const Section = styled.section`
+export const Section = styled.section`
     position: absolute;
     width: 100%;
     top: 0;

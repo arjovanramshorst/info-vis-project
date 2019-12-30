@@ -1,8 +1,8 @@
 import * as d3 from 'd3'
 
-const centreOfEurope: [number, number] = [12, 58]
+const centreOfEurope: [number, number] = [12, 57]
 
-const scaleToCenter = 0.8
+const scaleToCenter = 0.9
 
 export const d3Projection = (width: number, height: number) =>
     d3

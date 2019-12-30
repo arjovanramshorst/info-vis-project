@@ -32,6 +32,7 @@ const StyledMap = styled.div`
     }
 
     .country {
+        transition: fill 200ms ease-in-out;
         //fill: #4b5358; /* country colour */
         stroke: #2a2c39; /* country border colour */
         stroke-width: 1; /* country border width */
@@ -93,7 +94,7 @@ const colorRange = (feature: GenderEqualityFeature) => {
 
 export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
     const d3Container = useRef(null as HTMLDivElement | null)
-    const [width, setWidth] = useState(800)
+    const [width, setWidth] = useState(600)
     const [height, setHeight] = useState(800)
     const [geoData, setGeoData] = useState(null as IGeoData | null)
     const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData

@@ -14,8 +14,10 @@ const LearnMoreButton = styled.button`
     padding-left: 1vw;
     height: 10vh;
     cursor: pointer;
+    transition: 0.3s;
     &:hover {
-        // TODO: Add styling for hover here @ravi
+        background: black;
+        color: white;
     }
 `
 

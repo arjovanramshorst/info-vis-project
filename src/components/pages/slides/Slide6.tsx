@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { SlideText, SlideTitle } from './slides.components'
+import { Comp6 } from './Comp6.js';
 
 interface ISlide6 {
 
@@ -15,7 +16,8 @@ const Slide6: React.FunctionComponent<ISlide6> = ({}) => <div>
         Work, money, knowledge, time, power, and health.
         The domain with the smallest gap is Health. While the biggest gap is seen in Power.
     </SlideText>
-    {/*TODO: Add step 6 components here*/}
+    
+    <Comp6 />
 </div>
 
 export default Slide6

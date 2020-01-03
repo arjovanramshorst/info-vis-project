@@ -7,7 +7,7 @@ import { url } from '../../utils/router'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
 import {
-    COLORS,
+    COLORS, COLORS_FROM, COLORSCALE,
     genderEqualityData,
     GenderEqualityFeature,
     GenderEqualityYear,
@@ -74,7 +74,7 @@ export interface IGeoData {
 }
 
 const colorRange = (feature: GenderEqualityFeature) => {
-    return ['white', COLORS[feature]]
+    return COLORSCALE[feature]
 }
 
 export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
@@ -164,7 +164,7 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                     const path = d3Path(width, height)
 
                     const color = d3
-                        .scaleLinear()
+                        .scaleQuantize()
                         .domain([
                             // @ts-ignore
                             d3.min(data.features, d => d.equalityData && d.equalityData[featureKey]),

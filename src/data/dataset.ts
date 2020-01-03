@@ -46,6 +46,29 @@ export const COLORS: Record<GenderEqualityFeature, string> = {
     health: 'hsl(52, 100%, 48%)',
 }
 
+const color = (hue: number, brightness: number) => `hsl(${hue}, 100%, ${brightness}%)`
+const mapColor = (hue: number) => [90, 80, 70, 60, 50].map(b => color(hue,b))
+
+export const COLORSCALE: Record<GenderEqualityFeature, string[]> = {
+    gender_equality_index: mapColor(279),
+    work: mapColor(317),
+    money: mapColor(89),
+    knowledge: mapColor(227),
+    time: mapColor(26),
+    power: mapColor(1),
+    health: mapColor(52),
+}
+
+export const COLORS_FROM: Record<GenderEqualityFeature, string> = {
+    gender_equality_index: 'hsl(279, 30%, 40%)',
+    work: 'hsl(317, 30%, 35%)',
+    money: 'hsl(89, 30%, 36%)',
+    knowledge: 'hsl(227, 30%, 40%)',
+    time: 'hsl(26, 30%, 50%)',
+    power: 'hsl(1, 30%, 50%)',
+    health: 'hsl(52, 30%, 48%)',
+}
+
 export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) =>
     `${feature}_${year}` as keyof IGenderEqualityData
 
@@ -54,36 +77,43 @@ export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, y
         title: 'GEI',
         values: getValuesForCountry('gender_equality_index', country),
         color: COLORS.gender_equality_index,
+        feature: 'gender_equality_index',
     },
     {
         title: 'Work',
         values: getValuesForCountry('work', country),
         color: COLORS.work,
+        feature: 'work',
     },
     {
         title: 'Money',
         values: getValuesForCountry('money', country),
         color: COLORS.money,
+        feature: 'money',
     },
     {
         title: 'Knowledge',
         values: getValuesForCountry('knowledge', country),
         color: COLORS.knowledge,
+        feature: 'knowledge',
     },
     {
         title: 'Time',
         values: getValuesForCountry('time', country),
         color: COLORS.time,
+        feature: 'time',
     },
     {
         title: 'Power',
         values: getValuesForCountry('power', country),
         color: COLORS.power,
+        feature: 'power',
     },
     {
         title: 'Health',
         values: getValuesForCountry('health', country),
         color: COLORS.health,
+        feature: 'health',
     },
 ]
 

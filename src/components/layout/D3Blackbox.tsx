@@ -18,8 +18,8 @@ type ResizableHook = () => [React.MutableRefObject<HTMLDivElement | null>, numbe
 
 export const useResizableHook: ResizableHook = () => {
     const d3Container = useRef(null as HTMLDivElement | null)
-    const [width, setWidth] = useState(600)
-    const [height, setHeight] = useState(800)
+    const [width, setWidth] = useState(500)
+    const [height, setHeight] = useState(500)
 
     useEffect(() => {
         const resize = () => {

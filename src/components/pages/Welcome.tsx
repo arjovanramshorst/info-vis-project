@@ -26,7 +26,7 @@ const Title = styled.h1`
     font-size: 72px;
     margin-bottom: 10px;
     line-height: 1.15;
-    color: rgba(0,0,0,0.65);
+    color: rgba(0, 0, 0, 0.65);
 `
 
 const SubTitle = styled.h2`
@@ -34,7 +34,7 @@ const SubTitle = styled.h2`
     font-size: 30px;
     line-height: 1.15;
     padding-bottom: 10px;
-    color: rgba(0,0,0,0.65);
+    color: rgba(0, 0, 0, 0.65);
 `
 
 const Welcome = () => {

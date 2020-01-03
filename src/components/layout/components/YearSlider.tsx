@@ -7,7 +7,7 @@ interface IYearSlider {
     setYear: (year: GenderEqualityYear) => void
 }
 
-const YearSlider: React.FunctionComponent<IYearSlider> = ({year, setYear}) => (
+const YearSlider: React.FunctionComponent<IYearSlider> = ({ year, setYear }) => (
     <Slider
         step={null}
         min={2005}

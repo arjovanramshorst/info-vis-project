@@ -4,22 +4,15 @@ import YearSlider from '../../layout/components/YearSlider'
 import { ISlideProps } from './slides.interface'
 import { SlideText, SlideTitle } from './slides.components'
 
-interface ISlide7 extends ISlideProps {
+interface ISlide7 extends ISlideProps {}
 
-}
-
-const Slide7: React.FunctionComponent<ISlide7> = ({ year, setYear, feature, setFeature }) => <React.Fragment>
-    <SlideTitle>
-        How big is the gender gap in the European Union?
-    </SlideTitle>
-    <SlideText>
-        Play around with the data to see for yourself. Try clicking on a country or on a domain.
-    </SlideText>
-    <YearSlider year={year} setYear={setYear} />
-    <FeatureSelect
-        feature={feature}
-        setFeature={setFeature}
-    />
-</React.Fragment>
+const Slide7: React.FunctionComponent<ISlide7> = ({ year, setYear, feature, setFeature }) => (
+    <React.Fragment>
+        <SlideTitle>How big is the gender gap in the European Union?</SlideTitle>
+        <SlideText>Play around with the data to see for yourself. Try clicking on a country or on a domain.</SlideText>
+        <YearSlider year={year} setYear={setYear} />
+        <FeatureSelect feature={feature} setFeature={setFeature} />
+    </React.Fragment>
+)
 
 export default Slide7

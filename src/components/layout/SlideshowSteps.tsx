@@ -26,7 +26,7 @@ const SlideshowSteps = ({ step, setStep }: ISlideShowSteps) => {
                 <Step title="Core domains" description="" />
                 <Step title="See for yourself" description="" />
             </Steps>
-            
+
             <Divider />
         </StyledStepsContainer>
     )

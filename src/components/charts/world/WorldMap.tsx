@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { Col, Row } from 'antd'
 import * as d3 from 'd3'
 import { url } from '../../../utils/router'
 import { d3Path } from '../../../utils/d3'
 import D3Blackbox from '../../layout/D3Blackbox'
 import {
+    COLORS,
     genderEqualityData,
     GenderEqualityFeature,
     GenderEqualityYear,
@@ -72,24 +72,8 @@ export interface IGeoData {
     features: ICountry[]
 }
 
-
 const colorRange = (feature: GenderEqualityFeature) => {
-    switch(feature) {
-        case 'gender_equality_index':
-            return ['white', 'hsl(279, 100%, 40%)']
-        case 'work':
-            return ['white', 'hsl(317, 100%, 35%)']
-        case 'money':
-            return ['white', 'hsl(89, 100%, 36%)']
-        case 'knowledge':
-            return ['white', 'hsl(227, 100%, 40%)']
-        case 'time':
-            return ['white', 'hsl(26, 100%, 50%)']
-        case 'power':
-            return ['white', 'hsl(1, 100%, 50%)']
-        case 'health':
-            return ['white', 'hsl(52, 100%, 48%)']
-    }
+    return ['white', COLORS[feature]]
 }
 
 export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
@@ -106,18 +90,12 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                 setWidth(d3Container.current.getBoundingClientRect().width)
             }
         }
+        resize()
+
         window.addEventListener('resize', resize)
 
         return () => window.removeEventListener('resize', resize)
-    })
-
-    useEffect(() => {
-        // Update width/height
-        if (d3Container && d3Container.current) {
-            setHeight(d3Container.current.getBoundingClientRect().height)
-            setWidth(d3Container.current.getBoundingClientRect().width)
-        }
-    })
+    }, [])
 
     useEffect(() => {
         // Load initial data
@@ -159,81 +137,73 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
     }, [selected])
 
     return (
-        <Row>
-            <Col>
-                <StyledMap ref={d3Container}>
-                    <D3Blackbox
-                        x={0}
-                        y={0}
-                        width={width}
-                        height={height}
-                        data={geoData}
-                        dependsOn={[selectedYear, selectedFeature]}
-                        init={(svg, setElement) => {
-                            setElement('path', d3Path(width, height))
+        <StyledMap ref={d3Container}>
+            <D3Blackbox
+                x={0}
+                y={0}
+                width={width}
+                height={height}
+                data={geoData}
+                dependsOn={[selectedYear, selectedFeature]}
+                init={(svg, setElement) => {
+                    setElement('path', d3Path(width, height))
 
-                            const countriesGroup = svg.append('g').attr('id', 'map')
+                    const countriesGroup = svg.append('g').attr('id', 'map')
 
-                            // add a background rectangle
-                            countriesGroup
-                                .append('rect')
-                                .attr('x', 0)
-                                .attr('y', 0)
-                                .attr('width', width)
-                                .attr('height', height)
+                    // add a background rectangle
+                    const rectangle = countriesGroup
+                        .append('rect')
+                        .attr('x', 0)
+                        .attr('y', 0)
 
-                            setElement('countriesGroup', countriesGroup)
-                        }}
-                        render={(svg, data: IGeoData, { countriesGroup }) => {
-                            if (!countriesGroup) {
-                                return
-                            }
+                    setElement('rectangle', rectangle)
+                    setElement('countriesGroup', countriesGroup)
+                }}
+                render={(svg, data: IGeoData, { countriesGroup, rectangle }) => {
+                    if (!countriesGroup) {
+                        return
+                    }
 
-                            countriesGroup.attr('width', width).attr('height', height)
+                    rectangle.attr('width', width).attr('height', height)
 
-                            // draw a path for each feature/country
-                            const countries = countriesGroup.selectAll('path').data(data.features)
+                    countriesGroup.attr('width', width).attr('height', height)
 
-                            countries.enter().append('path')
+                    // draw a path for each feature/country
+                    const countries = countriesGroup.selectAll('path').data(data.features)
+
+                    countries.enter().append('path')
+
+                    countries.exit().remove()
+
+                    const path = d3Path(width, height)
+
+                    const color = d3
+                        .scaleLinear()
+                        .domain([
                             // @ts-ignore
+                            d3.min(data.features, d => d.equalityData && d.equalityData[featureKey]),
+                            // @ts-ignore
+                            d3.max(data.features, d => d.equalityData && d.equalityData[featureKey]),
+                        ])
+                        // @ts-ignore
+                        .range(colorRange(selectedFeature))
 
-                            countries.exit().remove()
-
-                            const path = d3Path(width, height)
-
-                            const color = d3
-                                .scaleLinear()
-                                .domain([
-                                    // @ts-ignore
-                                    d3.min(data.features, d => d.equalityData && d.equalityData[featureKey]),
-                                    // @ts-ignore
-                                    d3.max(data.features, d => d.equalityData && d.equalityData[featureKey]),
-                                ])
-                                // @ts-ignore
-                                .range(colorRange(selectedFeature))
-
-                            countries
-                                .attr('d', path)
-                                .attr(
-                                    'class',
-                                    (d: ICountry, i: any) =>
-                                        `country ${d.selected ? 'country-selected' : ''} ${
-                                            d.equalityData ? 'selectable' : ''
-                                        }`,
-                                )
-                                .attr('fill', (d: ICountry) =>
-                                    d.equalityData ? color(d.equalityData[featureKey]) : '#4b5358',
-                                )
-                                .on('click', (d: ICountry, i: any) => {
-                                    if (d.equalityData) {
-                                        setSelected(d)
-                                    }
-                                })
-                        }}
-                    />
-                </StyledMap>
-            </Col>
-        </Row>
+                    countries
+                        .attr('d', path)
+                        .attr(
+                            'class',
+                            (d: ICountry, i: any) =>
+                                `country ${d.selected ? 'country-selected' : ''} ${d.equalityData ? 'selectable' : ''}`,
+                        )
+                        .attr('fill', (d: ICountry) => (d.equalityData ? color(d.equalityData[featureKey]) : '#4b5358'))
+                        .on('click', (d: ICountry, i: any) => {
+                            if (d.equalityData) {
+                                setSelected(d)
+                            }
+                        })
+                }}
+            />
+        </StyledMap>
     )
 }
 

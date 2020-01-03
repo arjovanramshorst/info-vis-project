@@ -6,4 +6,3 @@ export interface ISlideProps {
     setFeature: (feature: GenderEqualityFeature) => void
     feature: GenderEqualityFeature
 }
-

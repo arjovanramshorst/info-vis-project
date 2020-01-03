@@ -5,7 +5,7 @@ export const SlideTitle = styled.h1`
     font-size: 36px;
     margin-bottom: 10px;
     line-height: 1.15;
-    color: rgba(0,0,0,0.65);
+    color: rgba(0, 0, 0, 0.65);
 `
 
 export const SlideText = styled.p`
@@ -13,5 +13,5 @@ export const SlideText = styled.p`
     font-size: 18px;
     line-height: 1.15;
     padding-bottom: 10px;
-    color: rgba(0,0,0,0.65);
+    color: rgba(0, 0, 0, 0.65);
 `

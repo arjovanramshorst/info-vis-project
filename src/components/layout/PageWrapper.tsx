@@ -22,12 +22,6 @@ const StyledLayoutContent = styled(Layout.Content)`
 `
 
 const StyledContentContainer = styled.div`
-    // Required for transitions
-    width: 100%;
-    top: 0;
-    left: 0;
-    // End required for transitions
-    
     background: #fff;
     padding: 24px;
     height: calc(100vh - 64px /*header*/ - 84px /*footer*/ - 100px /*padding*/);
@@ -86,13 +80,13 @@ const PageWrapper = () => {
                                 <TransitionGroup style={{ position: 'relative' }}>
                                     <CSSTransition key={slide} timeout={{ enter: 500, exit: 500 }} classNames={'fade'}>
                                         <Section>
-                                        {slide === 0 && <Slide1 {...slideProps} />}
-                                        {slide === 1 && <Slide2 {...slideProps} />}
-                                        {slide === 2 && <Slide3 {...slideProps} />}
-                                        {slide === 3 && <Slide4 {...slideProps} />}
-                                        {slide === 4 && <Slide5 {...slideProps} />}
-                                        {slide === 5 && <Slide6 {...slideProps} />}
-                                        {slide === 6 && <Slide7 {...slideProps} />}
+                                            {slide === 0 && <Slide1 {...slideProps} />}
+                                            {slide === 1 && <Slide2 {...slideProps} />}
+                                            {slide === 2 && <Slide3 {...slideProps} />}
+                                            {slide === 3 && <Slide4 {...slideProps} />}
+                                            {slide === 4 && <Slide5 {...slideProps} />}
+                                            {slide === 5 && <Slide6 {...slideProps} />}
+                                            {slide === 6 && <Slide7 {...slideProps} />}
                                         </Section>
                                     </CSSTransition>
                                 </TransitionGroup>

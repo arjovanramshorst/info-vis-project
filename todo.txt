@@ -1,0 +1,20 @@
+Generic
+Arrow key navigation
+
+Worldmap
+labels with index on hover
+scale bar for the worldmap
+DONE center worldmap
+
+Slide 1:
+
+Slide 2:
+
+Slide 3:
+
+Slide 4:
+
+Slide 5:
+
+Slide 6:
+

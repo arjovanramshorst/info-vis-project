@@ -9,7 +9,7 @@ const Slide4: React.FunctionComponent<ISlide4> = ({}) => (
         <SlideTitle>But others are staying behind.</SlideTitle>
         <SlideText>These countries scored the lowest GEI in the year 2015.</SlideText>
         {/*TODO: Add step 4 components here*/}
-        <IndexBarChart sort={(a,b) => a.value - b.value} />
+        <IndexBarChart sort={(a, b) => a.value - b.value} />
     </div>
 )
 

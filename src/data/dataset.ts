@@ -46,38 +46,46 @@ export const COLORS: Record<GenderEqualityFeature, string> = {
     health: 'hsl(52, 100%, 48%)',
 }
 
-export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) => `${feature}_${year}` as keyof IGenderEqualityData
+export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) =>
+    `${feature}_${year}` as keyof IGenderEqualityData
 
-export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) =>
-    [{
+export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) => [
+    {
         title: 'GEI',
         values: getValuesForCountry('gender_equality_index', country),
         color: COLORS.gender_equality_index,
-    }, {
+    },
+    {
         title: 'Work',
         values: getValuesForCountry('work', country),
         color: COLORS.work,
-    },{
+    },
+    {
         title: 'Money',
         values: getValuesForCountry('money', country),
         color: COLORS.money,
-    },{
+    },
+    {
         title: 'Knowledge',
         values: getValuesForCountry('knowledge', country),
         color: COLORS.knowledge,
-    },{
+    },
+    {
         title: 'Time',
         values: getValuesForCountry('time', country),
         color: COLORS.time,
-    },{
+    },
+    {
         title: 'Power',
         values: getValuesForCountry('power', country),
         color: COLORS.power,
-    },{
+    },
+    {
         title: 'Health',
         values: getValuesForCountry('health', country),
         color: COLORS.health,
-    }]
+    },
+]
 
 export const getValuesForCountry = (feature: GenderEqualityFeature, country: keyof typeof genderEqualityData) => {
     const index = {
@@ -85,19 +93,18 @@ export const getValuesForCountry = (feature: GenderEqualityFeature, country: key
         '2010': genderEqualityData[country][getKey(feature, '2010')],
         '2015': genderEqualityData[country][getKey(feature, '2015')],
     }
-    const predictedGrowthKeys = Array.from(Array(20).keys())
-        .map(x => `${x*5 + 2005}`)
+    const predictedGrowthKeys = Array.from(Array(20).keys()).map(x => `${x * 5 + 2005}`)
 
     const predictedGrowthValues = [
         index['2005'],
         index['2010'],
         index['2015'],
-        ...Array.from(Array(17).keys()).map(x => index['2015'] + (index['2015'] - index['2010']) * (x+1))
+        ...Array.from(Array(17).keys()).map(x => index['2015'] + (index['2015'] - index['2010']) * (x + 1)),
     ]
 
     return {
         index,
-        growth: predictedGrowthKeys.map((key, index) => ({ key, value: predictedGrowthValues[index]}))
+        growth: predictedGrowthKeys.map((key, index) => ({ key, value: predictedGrowthValues[index] })),
     }
 }
 

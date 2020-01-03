@@ -15,14 +15,13 @@ interface IGrowthChart {
 const StyledGrowthChart = styled.div`
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     height: 450px;
-    
+
     svg rect {
         fill: #f0f2f5; /* chart background colour */
     }
 `
 
 const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
-
     const [d3Container, width, height] = useResizableHook()
 
     const data = getPropertiesAsArray('EU-28', '2015')
@@ -40,16 +39,15 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
                 x={0}
                 y={0}
                 init={(svg, setElement) => {
-                    const background = svg.append('g')
+                    const background = svg
+                        .append('g')
                         .append('rect')
                         .attr('x', 0)
                         .attr('y', 0)
-                    const group = svg.append('g')
-                        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+                    const group = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`)
 
                     setElement('group', group)
                     setElement('background', background)
-
                 }}
                 render={(svg, data, { group, background }) => {
                     if (!group || !background) {
@@ -57,15 +55,18 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
                     }
                     background.attr('width', width).attr('height', height)
 
-                    const xScale = d3.scaleLinear()
+                    const xScale = d3
+                        .scaleLinear()
                         .domain([2005, 2100])
                         .range([0, innerWidth])
-                    const yScale = d3.scaleLinear()
+                    const yScale = d3
+                        .scaleLinear()
                         .domain([30, 110])
                         .range([innerHeight, 0])
 
-                    const line = d3.line()
-                    // @ts-ignore
+                    const line = d3
+                        .line()
+                        // @ts-ignore
                         .x(d => xScale(Number(d.key)))
                         // @ts-ignore
                         .y(d => yScale(d.value))
@@ -83,12 +84,12 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
                             .attr('d', line)
                     })
 
-                    group.append('g')
+                    group
+                        .append('g')
                         .attr('transform', `translate(0,${innerHeight})`)
                         .call(d3.axisBottom(xScale).ticks(20, 'd'))
 
-                    group.append('g')
-                        .call(d3.axisLeft(yScale))
+                    group.append('g').call(d3.axisLeft(yScale))
                 }}
             />
         </StyledGrowthChart>

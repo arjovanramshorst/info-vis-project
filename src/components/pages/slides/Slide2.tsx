@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { SlideText, SlideTitle } from './slides.components'
+import GrowthChart from '../../charts/GrowthChart'
 
 interface ISlide2 {}
 
@@ -11,6 +12,7 @@ const Slide2: React.FunctionComponent<ISlide2> = ({}) => (
             as it did in those 5 years, the gender gap will not be closed until 2090 (60 years too late).
         </SlideText>
 
+        <GrowthChart />
         {/*TODO: Add step 2 components here*/}
     </div>
 )

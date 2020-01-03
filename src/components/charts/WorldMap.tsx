@@ -2,16 +2,17 @@ import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import * as d3 from 'd3'
-import { url } from '../../../utils/router'
-import { d3Path } from '../../../utils/d3'
-import D3Blackbox from '../../layout/D3Blackbox'
+import classNames from 'classnames'
+import { url } from '../../utils/router'
+import { d3Path } from '../../utils/d3'
+import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
 import {
     COLORS,
     genderEqualityData,
     GenderEqualityFeature,
     GenderEqualityYear,
     IGenderEqualityData,
-} from '../../../data/dataset'
+} from '../../data/dataset'
 
 interface IWorldMap {
     selected: ICountry | null
@@ -77,25 +78,10 @@ const colorRange = (feature: GenderEqualityFeature) => {
 }
 
 export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
-    const d3Container = useRef(null as HTMLDivElement | null)
-    const [width, setWidth] = useState(600)
-    const [height, setHeight] = useState(800)
     const [geoData, setGeoData] = useState(null as IGeoData | null)
     const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData
 
-    useEffect(() => {
-        const resize = () => {
-            if (d3Container && d3Container.current) {
-                setHeight(d3Container.current.getBoundingClientRect().height)
-                setWidth(d3Container.current.getBoundingClientRect().width)
-            }
-        }
-        resize()
-
-        window.addEventListener('resize', resize)
-
-        return () => window.removeEventListener('resize', resize)
-    }, [])
+    const [d3Container, width, height] = useResizableHook()
 
     useEffect(() => {
         // Load initial data
@@ -190,13 +176,11 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
 
                     countries
                         .attr('d', path)
-                        .attr(
-                            'class',
-                            (d: ICountry, i: any) =>
-                                `country ${d.selected ? 'country-selected' : ''} ${d.equalityData ? 'selectable' : ''}`,
+                        .attr('class', (d: ICountry) =>
+                            classNames('country', d.selected && 'country-selected', d.equalityData && 'selectable'),
                         )
                         .attr('fill', (d: ICountry) => (d.equalityData ? color(d.equalityData[featureKey]) : '#4b5358'))
-                        .on('click', (d: ICountry, i: any) => {
+                        .on('click', (d: ICountry) => {
                             if (d.equalityData) {
                                 setSelected(d)
                             }

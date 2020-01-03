@@ -4,7 +4,7 @@ import { Col, Layout, Row } from 'antd'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import SlideshowSteps from './SlideshowSteps'
-import WorldMap, { ICountry } from '../charts/world/WorldMap'
+import WorldMap, { ICountry } from '../charts/WorldMap'
 import { GenderEqualityFeature, GenderEqualityYear } from '../../data/dataset'
 import Slide1 from '../pages/slides/Slide1'
 import Slide2 from '../pages/slides/Slide2'
@@ -41,13 +41,7 @@ const PageWrapper = () => {
     const [feature, setFeature] = useState('gender_equality_index' as GenderEqualityFeature)
     const [year, setYear] = useState('2005' as GenderEqualityYear)
 
-    const graphColorSelect = ['blue', '#F44336']
-    const boxShadow = [
-        '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-        '0 4px 8px 0 grey, 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    ]
-
-    const slideProps = { year, setYear, feature, setFeature }
+    const slideProps = { country, setCountry, year, setYear, feature, setFeature }
 
     return (
         <div>

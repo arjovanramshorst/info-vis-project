@@ -27,7 +27,7 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
 
     const data = getPropertiesAsArray('EU-28', '2015')
 
-    const margin = {top: 50, right: 50, bottom: 50, left: 50}
+    const margin = { top: 50, right: 50, bottom: 50, left: 50 }
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
@@ -57,7 +57,6 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
                     }
                     background.attr('width', width).attr('height', height)
 
-
                     const xScale = d3.scaleLinear()
                         .domain([2005, 2100])
                         .range([0, innerWidth])
@@ -66,7 +65,7 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
                         .range([innerHeight, 0])
 
                     const line = d3.line()
-                        // @ts-ignore
+                    // @ts-ignore
                         .x(d => xScale(Number(d.key)))
                         // @ts-ignore
                         .y(d => yScale(d.value))
@@ -86,7 +85,7 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({}) => {
 
                     group.append('g')
                         .attr('transform', `translate(0,${innerHeight})`)
-                        .call(d3.axisBottom(xScale))
+                        .call(d3.axisBottom(xScale).ticks(20, 'd'))
 
                     group.append('g')
                         .call(d3.axisLeft(yScale))

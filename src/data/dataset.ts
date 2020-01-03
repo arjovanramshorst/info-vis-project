@@ -46,7 +46,7 @@ export const COLORS: Record<GenderEqualityFeature, string> = {
     health: 'hsl(52, 100%, 48%)',
 }
 
-const key = (feature: GenderEqualityFeature, year: GenderEqualityYear) => `${feature}_${year}` as keyof IGenderEqualityData
+export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) => `${feature}_${year}` as keyof IGenderEqualityData
 
 export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) =>
     [{
@@ -81,9 +81,9 @@ export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, y
 
 export const getValuesForCountry = (feature: GenderEqualityFeature, country: keyof typeof genderEqualityData) => {
     const index = {
-        '2005': genderEqualityData[country][key(feature, '2005')],
-        '2010': genderEqualityData[country][key(feature, '2010')],
-        '2015': genderEqualityData[country][key(feature, '2015')],
+        '2005': genderEqualityData[country][getKey(feature, '2005')],
+        '2010': genderEqualityData[country][getKey(feature, '2010')],
+        '2015': genderEqualityData[country][getKey(feature, '2015')],
     }
     const predictedGrowthKeys = Array.from(Array(20).keys())
         .map(x => `${x*5 + 2005}`)

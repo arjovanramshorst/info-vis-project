@@ -1,20 +1,51 @@
-Generic
-Arrow key navigation
+# Generic:
+- Arrow key navigation
+- Add more text/improve the story flow?
 
-Worldmap
-labels with index on hover
-scale bar for the worldmap
-DONE center worldmap
+# Worldmap:
+- labels with index for country on hover
+- Legend for the worldmap (bottom right showing scale bands for each of the 5 colors?)
+- Title on top left showing: <FEATURE> - <YEAR/Growth>
+- Better hover effect (shader instead of white color?
+- Better selected effect (shader/border/whatever?) and remove red color
+- DONE fix center worldmap
 
-Slide 1:
+# Slide 1:
+- Add explanation for each of the 6 features and their respective colors
 
-Slide 2:
+# Slide 2:
+- Growth chart is not the same as text (it's not at 100% at 2090, @Emily, where did you get the 2090 value?)
+- The growth chart is pretty ugly as it is now,
+    either:
+    - replace with timeline?
+    or
+    - add markers for 100% horizontal line
+    - add vertical line or something at 2020 to show that that's the current year?
+    - add vertical line when GEI reaches 100%?
+    - add hover effect/label that shows date, (expected) index, and feature name
+    - change to dashed line after 2015 so it's clear what is predicted for the predicted values.
+- If we keep this chart, add hover effect showing expected index in certain year, and feature name
+- Add a legend?
+- If we keep growth chart: fix the rerendering of axis and scale stuff, just as it is done in IndexBarChart and LoadingBarChart
 
-Slide 3:
+# Slide 3 4 5:
+- Add hover effect to IndexBarChart, showing at least the index and country name, if you don't know of a clean way to get
+the country name from the current data, add a temporary string, and I'll fix that tomorrow/wednesday
+- Decide whether or not to show all countries on those charts but just top N? Because otherwise slide 4 and 5 are more
+or less the same?
+- Decide whether or not you can also select a feature on these slides to show the values just for that feature? Is
+already more or less implemented, we just need to decide whether we want to add that here already.
+- Decide what we want to do with showing the EU score in these slides
 
-Slide 4:
+# Slide 6:
+- Current chart looks out of place and does not add a lot compared to slide 7, especially if the domains are explained
+in slide 1. So probably remove entire slide, we can discuss this tomorrow afternoon.
 
-Slide 5:
-
-Slide 6:
-
+# Slide 7:
+- IMPORTANT: fix updating of the values when data changes (when the country prop changes)
+- Remove drop down for features, since you can click on the chart
+- Add hover/selected effects to LoadingBarChart
+- Restyle it so it is more clearer that 100% is the max? Maybe wrap boxes around the charts? restyle the axis? I don't
+know, go wild hehe
+- Add a title to the chart that shows exactly for what year and country it is currently showing, regarding getting the
+full country name, see the point above, just add a temp string if you can't get it.

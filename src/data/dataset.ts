@@ -1,6 +1,8 @@
 /*
 This file can contain the preprocessed data set so it can be used by d3 or whatever we choose.
  */
+import { ICountry } from '../components/charts/WorldMap'
+
 export interface IGenderEqualityData {
     gender_equality_index_2005: number
     gender_equality_index_2010: number
@@ -34,7 +36,7 @@ export type GenderEqualityFeature =
     | 'power'
     | 'health'
 
-export type GenderEqualityYear = '2005' | '2010' | '2015'
+export type GenderEqualityYear = '2005' | '2010' | '2015' | 'growth'
 
 export const COLORS: Record<GenderEqualityFeature, string> = {
     gender_equality_index: 'hsl(279, 100%, 40%)',
@@ -47,7 +49,7 @@ export const COLORS: Record<GenderEqualityFeature, string> = {
 }
 
 const color = (hue: number, brightness: number) => `hsl(${hue}, 100%, ${brightness}%)`
-const mapColor = (hue: number) => [90, 80, 70, 60, 50].map(b => color(hue,b))
+const mapColor = (hue: number) => [90, 80, 70, 60, 50].map(b => color(hue, b))
 
 export const COLORSCALE: Record<GenderEqualityFeature, string[]> = {
     gender_equality_index: mapColor(279),
@@ -71,6 +73,9 @@ export const COLORS_FROM: Record<GenderEqualityFeature, string> = {
 
 export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) =>
     `${feature}_${year}` as keyof IGenderEqualityData
+
+export const countryCode = (country: ICountry | null) =>
+    (country ? country.properties.iso_a2 : 'EU-28') as keyof typeof genderEqualityData
 
 export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) => [
     {

@@ -1,11 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { getPropertiesAsArray } from '../../data/dataset'
+import { countryCode, GenderEqualityFeature, GenderEqualityYear, getPropertiesAsArray } from '../../data/dataset'
 import * as d3 from 'd3'
+import { ICountry } from './WorldMap'
 
 interface ILoadingBarChart {
-
+    year: GenderEqualityYear
+    setFeature: (feature: GenderEqualityFeature) => void
+    country: ICountry | null
 }
 
 const StyledLoadingBarChart = styled.div`
@@ -17,27 +20,26 @@ const StyledLoadingBarChart = styled.div`
     }
 `
 
-const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({}) => {
+const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, country, setFeature }) => {
     const [d3Container, width, height] = useResizableHook()
 
     const margin = { top: 50, right: 50, bottom: 50, left: 50 }
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
-    // TODO: Move to props
-    const year = '2015'
-    const country = 'EU-28'
-
-    const data = getPropertiesAsArray(country, year).map(feature => ({
+    const data = getPropertiesAsArray(countryCode(country), year).map(feature => ({
         key: feature.title,
-        value: feature.values.index[year],
+        value:
+            year === 'growth'
+                ? feature.values.index['2015'] - feature.values.index['2005']
+                : feature.values.index[year],
         color: feature.color,
+        feature: feature.feature,
     }))
 
     return (
         <StyledLoadingBarChart ref={d3Container}>
             <D3Blackbox
-
                 x={0}
                 y={0}
                 width={width}
@@ -52,9 +54,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({}) => {
                         .attr('y', 0)
                     const group = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-                    const xScale = d3
-                        .scaleLinear()
-                        .domain([0, 100])
+                    const xScale = d3.scaleLinear().domain([0, 100])
 
                     const yScale = d3
                         .scaleBand()
@@ -63,11 +63,9 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({}) => {
                         .paddingInner(0.05)
                         .paddingOuter(0.1)
 
-                    const axisLeft = group
-                        .append('g')
-
                     const axisBottom = group.append('g')
-                        .call(d3.axisLeft(yScale))
+
+                    const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
                     setElement('group', group)
                     setElement('background', background)
@@ -86,36 +84,38 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({}) => {
                     xScale.range([0, innerWidth])
                     yScale.range([innerHeight, 0])
 
-                    axisLeft
-                        .attr('transform', `translate(0,${innerHeight})`)
-                        .call(d3.axisBottom(xScale))
+                    axisBottom.attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(xScale))
 
-                    axisBottom
-                        .call(d3.axisLeft(yScale))
+                    axisLeft.call(d3.axisLeft(yScale))
 
-                    const barGroup = group
-                        .selectAll('.bar')
-                        .data(data)
+                    console.log(data)
+                    const barGroup = group.selectAll('.bar').data(data)
 
                     const bar = barGroup
                         .enter()
+                        .call(() => console.log('enter'))
                         .append('g')
 
-                    barGroup.exit().remove()
+                    barGroup
+                        .exit()
+                        .call(() => console.log('exit'))
+                        .remove()
 
-                    bar
-                        .attr('class', 'bar')
+                    bar.attr('class', 'bar')
                         .attr('transform', (d: any) => `translate(0, ${yScale(d.key)})`)
+                        .on('click', (d: any) => setFeature(d.feature))
 
+                    bar.append('rect').attr('class', 'rect')
 
-                    bar.append('rect')
-                        .attr('class', 'rect')
-
+                    // TODO: Figure out why the data (d) HERE is not changed when data in this function has changed?!?!?!?!?!
+                    // TODO: This is necessary for the onClick to work on the last slide, which is kinda important.... :\
                     svg.selectAll('.rect')
-                        .attr('width', (d: any) => xScale(d.value))
+                        .attr('width', (d: any) => {
+                            console.log(d)
+                            return xScale(d.value)
+                        })
                         .attr('height', yScale.bandwidth())
                         .attr('fill', (d: any) => d.color)
-
                 }}
             />
         </StyledLoadingBarChart>

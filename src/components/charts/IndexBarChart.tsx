@@ -1,11 +1,15 @@
 import * as React from 'react'
 import * as d3 from 'd3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { COLORS, genderEqualityData, getKey } from '../../data/dataset'
+import { COLORS, genderEqualityData, GenderEqualityFeature, GenderEqualityYear, getKey } from '../../data/dataset'
 import styled from 'styled-components'
 
 interface IIndexBarChart {
     sort: (a: { key: string; value: number }, b: { key: string; value: number }) => number
+    feature: GenderEqualityFeature
+    year: GenderEqualityYear
+    from?: number
+    to?: number
 }
 
 const StyledIndexBarChart = styled.div`
@@ -17,7 +21,7 @@ const StyledIndexBarChart = styled.div`
     }
 `
 
-const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort }) => {
+const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature, year, from = 0, to = 100 }) => {
     const [d3Container, width, height] = useResizableHook()
 
     const { ['EU-28']: eu, ...withoutEu } = genderEqualityData
@@ -26,15 +30,15 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort }) => {
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
-    // TODO: Move to props
-    const feature = 'gender_equality_index'
-    const year = '2015'
-
     const data = Object.keys(withoutEu)
         .map(countryKey => ({
             key: countryKey,
-            // @ts-ignore
-            value: withoutEu[countryKey][getKey(feature, year)],
+            value:
+                year === 'growth'
+                    // @ts-ignore
+                    ? withoutEu[countryKey][getKey(feature, '2015')] - withoutEu[countryKey][getKey(feature, '2005')]
+                    // @ts-ignore
+                    : withoutEu[countryKey][getKey(feature, year)],
         }))
         .sort(sort)
 
@@ -55,16 +59,6 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort }) => {
                         .attr('y', 0)
                     const group = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-                    setElement('group', group)
-                    setElement('background', background)
-                }}
-                render={(svg, data, { group, background }) => {
-                    if (!group || !background) {
-                        return
-                    }
-
-                    background.attr('width', width).attr('height', height)
-
                     const xScale = d3
                         .scaleBand()
                         .range([0, innerWidth])
@@ -76,14 +70,34 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort }) => {
                     const yScale = d3
                         .scaleLinear()
                         .range([innerHeight, 0])
-                        .domain([0, 100])
+                        .domain([from, to])
 
-                    group
+                    const axisBottom = group
                         .append('g')
                         .attr('transform', `translate(0,${innerHeight})`)
                         .call(d3.axisBottom(xScale))
 
-                    group.append('g').call(d3.axisLeft(yScale))
+                    const axisLeft = group.append('g').call(d3.axisLeft(yScale))
+
+                    setElement('group', group)
+                    setElement('background', background)
+                    setElement('xScale', xScale)
+                    setElement('yScale', yScale)
+                    setElement('axisBottom', axisBottom)
+                    setElement('axisLeft', axisLeft)
+                }}
+                render={(svg, data, { group, background, xScale, yScale, axisBottom, axisLeft }) => {
+                    if (!group || !background) {
+                        return
+                    }
+
+                    background.attr('width', width).attr('height', height)
+
+                    xScale.range([0, innerWidth]).domain(data.map(d => d.key))
+                    yScale.range([innerHeight, 0])
+
+                    axisBottom.attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(xScale))
+                    axisLeft.call(d3.axisLeft(yScale))
 
                     const bar = group
                         .selectAll('.bar')
@@ -94,8 +108,8 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort }) => {
                         .attr('transform', (d: any) => `translate(${xScale(d.key)},0)`)
 
                     bar.append('rect')
-                        .attr('y', (d: any) => yScale(d.value))
-                        .attr('height', (d: any) => innerHeight - yScale(d.value))
+                        .attr('y', (d: any) => Math.min(yScale(0), yScale(d.value)))
+                        .attr('height', (d: any) => Math.abs(yScale(0) - yScale(d.value)))
                         .attr('width', xScale.bandwidth())
                         .attr('fill', COLORS[feature])
                 }}

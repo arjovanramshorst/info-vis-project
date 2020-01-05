@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import * as d3 from 'd3'
 import classNames from 'classnames'
@@ -7,10 +7,11 @@ import { url } from '../../utils/router'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
 import {
-    COLORS, COLORS_FROM, COLORSCALE,
+    COLORSCALE,
     genderEqualityData,
     GenderEqualityFeature,
     GenderEqualityYear,
+    getKey,
     IGenderEqualityData,
 } from '../../data/dataset'
 
@@ -79,9 +80,16 @@ const colorRange = (feature: GenderEqualityFeature) => {
 
 export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
     const [geoData, setGeoData] = useState(null as IGeoData | null)
-    const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData
-
     const [d3Container, width, height] = useResizableHook()
+
+    const getFeature =
+        selectedYear === 'growth'
+            ? (d: any) =>
+                  d.equalityData &&
+                  d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')]
+            : (d: any) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
+
+    // const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData
 
     useEffect(() => {
         // Load initial data
@@ -167,9 +175,9 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .scaleQuantize()
                         .domain([
                             // @ts-ignore
-                            d3.min(data.features, d => d.equalityData && d.equalityData[featureKey]),
+                            d3.min(data.features, getFeature),
                             // @ts-ignore
-                            d3.max(data.features, d => d.equalityData && d.equalityData[featureKey]),
+                            d3.max(data.features, getFeature),
                         ])
                         // @ts-ignore
                         .range(colorRange(selectedFeature))
@@ -179,7 +187,7 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .attr('class', (d: ICountry) =>
                             classNames('country', d.selected && 'country-selected', d.equalityData && 'selectable'),
                         )
-                        .attr('fill', (d: ICountry) => (d.equalityData ? color(d.equalityData[featureKey]) : '#4b5358'))
+                        .attr('fill', (d: ICountry) => (d.equalityData ? color(getFeature(d)) : '#4b5358'))
                         .on('click', (d: ICountry) => {
                             if (d.equalityData) {
                                 setSelected(d)

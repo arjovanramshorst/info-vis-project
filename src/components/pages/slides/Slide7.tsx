@@ -9,10 +9,8 @@ interface ISlide7 extends ISlideProps {}
 
 const Slide7: React.FunctionComponent<ISlide7> = ({ country, year, setYear, feature, setFeature }) => (
     <React.Fragment>
-        <SlideTitle>How big is the gender gap in the European Union?</SlideTitle>
+        <SlideTitle>Gender gap in the European Union</SlideTitle>
         <SlideText>Play around with the data to see for yourself. Try clicking on a country or on a domain.</SlideText>
-        <YearSlider year={year} setYear={setYear} />
-        <FeatureSelect feature={feature} setFeature={setFeature} />
         <LoadingBarChart year={year} setFeature={setFeature} country={country} />
     </React.Fragment>
 )

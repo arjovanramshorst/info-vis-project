@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const { Step } = Steps
 
 const StyledStepsContainer = styled.div`
-    background-color: #ffffff;
+    background-color: #f0f2f5;
     padding: 25px 25px 0 25px;
 `
 

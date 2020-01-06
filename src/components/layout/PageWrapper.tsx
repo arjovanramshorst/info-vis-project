@@ -15,6 +15,9 @@ import Slide4 from '../pages/slides/Slide4'
 import Slide3 from '../pages/slides/Slide3'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Section } from '../../App'
+import YearSlider from './components/YearSlider'
+import FeatureSelect from './components/FeatureSelect'
+
 
 const StyledLayoutContent = styled(Layout.Content)`
     padding: 50px;
@@ -22,7 +25,7 @@ const StyledLayoutContent = styled(Layout.Content)`
 `
 
 const StyledContentContainer = styled.div`
-    background: #fff;
+    background: #f0f2f5;
     padding: 24px;
     height: calc(100vh - 64px /*header*/ - 84px /*footer*/ - 100px /*padding*/);
 `
@@ -39,39 +42,40 @@ const PageWrapper = () => {
     const [slide, setSlide] = useState(0)
 
     const [feature, setFeature] = useState('gender_equality_index' as GenderEqualityFeature)
-    const [year, setYear] = useState('2005' as GenderEqualityYear)
+    const [year, setYear] = useState('2010' as GenderEqualityYear)
 
     const slideProps = { country, setCountry, year, setYear, feature, setFeature }
 
     return (
         <div>
-            <Layout style={{ backgroundColor: 'white' }}>
+            <Layout style={{ backgroundColor: '#f0f2f5' }}>
                 <SlideshowSteps step={slide} setStep={setSlide} />
                 <Row type="flex" align="middle">
-                    <Col md={1}>
-                        {slide > 0 && (
-                            <StyledArrow
-                                onClick={() => {
-                                    setSlide(slide - 1)
-                                }}
-                            >
-                                ❮
-                            </StyledArrow>
-                        )}
-                    </Col>
-                    <Col md={8}>
-                        {/*Hide for first slide or not?*/}
-                        <WorldMap
-                            selected={country}
-                            setSelected={setCountry}
-                            selectedFeature={feature}
-                            selectedYear={year}
-                        />
-                    </Col>
-                    <Col md={14}>
+                    
+                    {
+                        slide === 6 ? <div style={{display : "flex", marginLeft:'2vh'}}>
+                            <div style={{marginTop:'-4vh'}}>
+                                <YearSlider year={year} setYear={setYear} />
+                                    <WorldMap
+                                        selected={country}
+                                        setSelected={setCountry}
+                                        selectedFeature={feature}
+                                        selectedYear={year}
+                                    />
+                                <FeatureSelect feature={feature} setFeature={setFeature}/>
+                            </div>
+                            <div style={{margin:'4vh'}}>
+                                <p>The selected country is The Netherlands.</p>
+                                <p>Display facts about The Netherlands</p>
+                            </div>
+                        </div>
+                    
+                    :
+                    
+                    <Col md={21}>
                         <StyledLayoutContent>
                             <StyledContentContainer>
-                                <TransitionGroup style={{ position: 'relative' }}>
+                                <TransitionGroup style={{ position: 'relative', marginTop:'-4vh' }}>
                                     <CSSTransition key={slide} timeout={{ enter: 500, exit: 500 }} classNames={'fade'}>
                                         <Section>
                                             {slide === 0 && <Slide1 {...slideProps} />}
@@ -80,13 +84,13 @@ const PageWrapper = () => {
                                             {slide === 3 && <Slide4 {...slideProps} />}
                                             {slide === 4 && <Slide5 {...slideProps} />}
                                             {slide === 5 && <Slide6 {...slideProps} />}
-                                            {slide === 6 && <Slide7 {...slideProps} />}
                                         </Section>
                                     </CSSTransition>
                                 </TransitionGroup>
                             </StyledContentContainer>
                         </StyledLayoutContent>
                     </Col>
+                    }
                     <Col md={1}>
                         {slide < 6 && (
                             <StyledArrow

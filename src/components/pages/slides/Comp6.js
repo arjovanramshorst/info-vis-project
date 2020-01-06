@@ -62,7 +62,7 @@ export function Comp6() {
                     </button>
                 </div>
             </div>
-            <div>
+            <div style={{display:'flex', alignContent:'center', justifyContent:'center'}}>
                 <AnimatedBar data={data} width={600} height={400} top={20} bottom={30} left={30} right={0} />
             </div>
         </div>

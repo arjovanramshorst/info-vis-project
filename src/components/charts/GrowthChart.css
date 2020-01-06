@@ -1,0 +1,26 @@
+.selectorCSS{
+    font-size: 24px;
+    display:flex;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    flex: 1;
+    text-align:center;
+    justify-content:center;
+    align-items:center;
+    transition: 0.3s;
+}
+.selectorCSS:hover > .optionsCSS{
+    background: black;
+    color: white;
+}
+.optionsCSS {
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background-color: #f0f2f5;
+    text-align: center;
+    text-align-last: center;
+    width: 100%;
+    transition: 0.3s;
+}

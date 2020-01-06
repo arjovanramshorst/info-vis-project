@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import { url } from '../../utils/router'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
+
 import {
     COLORSCALE,
     genderEqualityData,
@@ -23,7 +24,7 @@ interface IWorldMap {
 }
 
 const StyledMap = styled.div`
-    height: calc(100vh - 152px);
+    height: 75vh;
     margin-bottom: 12px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
@@ -164,7 +165,6 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
 
                     // draw a path for each feature/country
                     const countries = countriesGroup.selectAll('path').data(data.features)
-
                     countries.enter().append('path')
 
                     countries.exit().remove()

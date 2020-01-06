@@ -49,7 +49,7 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                 y={0}
                 width={width}
                 height={height}
-                data={data}
+                data={data.slice(0,10)}
                 init={(svg, setElement) => {
                     const background = svg
                         .append('g')
@@ -96,9 +96,8 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                     xScale.range([0, innerWidth]).domain(data.map(d => d.key))
                     yScale.range([innerHeight, 0])
 
-                    axisBottom.attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(xScale))
-                    axisLeft.call(d3.axisLeft(yScale))
-
+                    group.selectAll("*").remove();
+                    
                     const bar = group
                         .selectAll('.bar')
                         .data(data)
@@ -112,6 +111,13 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                         .attr('height', (d: any) => Math.abs(yScale(0) - yScale(d.value)))
                         .attr('width', xScale.bandwidth())
                         .attr('fill', COLORS[feature])
+                    
+                    group
+                        .append('g')
+                        .attr('transform', `translate(0,${innerHeight})`)
+                        .call(d3.axisBottom(xScale).ticks(20, 'd'))
+
+                    group.append('g').call(d3.axisLeft(yScale))
                 }}
             />
         </StyledIndexBarChart>

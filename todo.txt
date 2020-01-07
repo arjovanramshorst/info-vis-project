@@ -32,10 +32,10 @@ R- Add horizontal line showing EU average on bar charts
 E- Explain core domains image/development
 
 # Slide 7:
-A- IMPORTANT: fix updating of the values when data changes (when the country prop changes)
-R- Remove drop down for features, since you can click on the chart
+(DONE) A- IMPORTANT: fix updating of the values when data changes (when the country prop changes)
+(DONE) R- Remove drop down for features, since you can click on the chart
 R- Add hover/selected effects to LoadingBarChart
-R- Restyle it so it is more clearer that 100% is the max? Maybe wrap boxes around the charts? restyle the axis? I don't
+(DONE) R- Restyle it so it is more clearer that 100% is the max? Maybe wrap boxes around the charts? restyle the axis? I don't
 know, go wild hehe
-R- Add a title to the chart that shows exactly for what year and country it is currently showing, regarding getting the
+(DONE) R- Add a title to the chart that shows exactly for what year and country it is currently showing, regarding getting the
 full country name, see the point above, just add a temp string if you can't get it.

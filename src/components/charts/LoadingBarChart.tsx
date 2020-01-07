@@ -23,7 +23,7 @@ const StyledLoadingBarChart = styled.div`
 const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, country, setFeature }) => {
     const [d3Container, width, height] = useResizableHook()
 
-    const margin = { top: 50, right: 50, bottom: 50, left: 50 }
+    const margin = { top: 25, right: 20, bottom: 50, left: 75 }
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
@@ -36,6 +36,8 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
         color: feature.color,
         feature: feature.feature,
     }))
+
+    console.log("Year : ", year, " Country : ", country);
 
     return (
         <StyledLoadingBarChart ref={d3Container}>
@@ -84,11 +86,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                     xScale.range([0, innerWidth])
                     yScale.range([innerHeight, 0])
 
-                    axisBottom.attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(xScale))
-
-                    axisLeft.call(d3.axisLeft(yScale))
-
-                    console.log(data)
+                    group.selectAll("*").remove();
                     const barGroup = group.selectAll('.bar').data(data)
 
                     const bar = barGroup
@@ -107,15 +105,19 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
 
                     bar.append('rect').attr('class', 'rect')
 
-                    // TODO: Figure out why the data (d) HERE is not changed when data in this function has changed?!?!?!?!?!
-                    // TODO: This is necessary for the onClick to work on the last slide, which is kinda important.... :\
                     svg.selectAll('.rect')
                         .attr('width', (d: any) => {
-                            console.log(d)
                             return xScale(d.value)
                         })
                         .attr('height', yScale.bandwidth())
                         .attr('fill', (d: any) => d.color)
+                    
+                    group
+                        .append('g')
+                        .attr('transform', `translate(0,${innerHeight})`)
+                        .call(d3.axisBottom(xScale).ticks(20, 'd'))
+
+                    group.append('g').call(d3.axisLeft(yScale))
                 }}
             />
         </StyledLoadingBarChart>

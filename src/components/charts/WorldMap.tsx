@@ -42,12 +42,20 @@ const StyledMap = styled.div`
             //fill: rgba(0,0,0,0.30);
             cursor: pointer;
             &:hover {
-                fill: #ffffff; /* hover colour */
+                // fill: #ffffff; /* hover colour */
+                // filter: brightness(110%);
+                // fill:brightness(110%);
+                background-color: #000000;
+                opacity: 0.75
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
             }
         }
 
         &.country-selected {
-            fill: #ff0000; /* country colour */
+            fill: rgb(101, 110, 99); /* country colour */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border: 3px solid black;
         }
     }
 
@@ -132,6 +140,7 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
 
     return (
         <StyledMap ref={d3Container}>
+            {/* {selectedYear} {selectedFeature} */}
             <D3Blackbox
                 x={0}
                 y={0}
@@ -149,9 +158,22 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .append('rect')
                         .attr('x', 0)
                         .attr('y', 0)
+                    
+                    const yeartext = svg.append('text').text(selectedYear)
+                        .attr('x', 50)
+                        .attr('y', 50)
+                        .attr('fill', 'black')
+                    
+                    const featuretext = svg.append('text').text(selectedFeature)
+                        .attr('x', 50)
+                        .attr('y', 75)
+                        .attr('fill', 'black')
 
                     setElement('rectangle', rectangle)
                     setElement('countriesGroup', countriesGroup)
+                    setElement('yeartext', yeartext)
+                    setElement('featuretext', featuretext)
+
                 }}
                 render={(svg, data: IGeoData, { countriesGroup, rectangle }) => {
                     if (!countriesGroup) {

@@ -71,9 +71,9 @@ const PageWrapper = () => {
                     <Col md={14}>
                         <StyledLayoutContent>
                             <StyledContentContainer>
-                                <TransitionGroup style={{ position: 'relative' }}>
+                                <TransitionGroup>
                                     <CSSTransition key={slide} timeout={{ enter: 500, exit: 500 }} classNames={'fade'}>
-                                        <Section>
+                                        <Section style={{padding:'2.5vw'}}>
                                             {slide === 0 && <Slide1 {...slideProps} />}
                                             {slide === 1 && <Slide2 {...slideProps} />}
                                             {slide === 2 && <Slide3 {...slideProps} />}

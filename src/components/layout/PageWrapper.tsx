@@ -15,6 +15,7 @@ import Slide4 from '../pages/slides/Slide4'
 import Slide3 from '../pages/slides/Slide3'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Section } from '../../App'
+import  Legend  from './components/Legend.js'
 
 const StyledLayoutContent = styled(Layout.Content)`
     padding: 50px;

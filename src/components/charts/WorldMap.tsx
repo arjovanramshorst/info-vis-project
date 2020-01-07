@@ -140,7 +140,6 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
 
     return (
         <StyledMap ref={d3Container}>
-            {/* {selectedYear} {selectedFeature} */}
             <D3Blackbox
                 x={0}
                 y={0}

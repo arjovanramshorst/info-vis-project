@@ -20,7 +20,7 @@ const Slide4: React.FunctionComponent<ISlide4> = ({ setYear, setFeature, feature
             <SlideTitle>But others are staying behind.</SlideTitle>
             <SlideText>These countries scored the lowest
             <span style={{margin:'5px'}}><FeatureSelect feature={feature} setFeature={setFeature}/></span>
-                in the year
+                rank in the year
                 <span style={{margin:'5px'}}><YearSelect year={year} setYear={setYear}/></span>
             </SlideText>
             <IndexBarChart sort={(a, b) => a.value - b.value} feature={feature} year={year} />

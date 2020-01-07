@@ -37,8 +37,6 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
         feature: feature.feature,
     }))
 
-    console.log("Year : ", year, " Country : ", country);
-
     return (
         <StyledLoadingBarChart ref={d3Container}>
             <D3Blackbox

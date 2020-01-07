@@ -9,7 +9,7 @@ R- labels with index for country on hover
 (DONE) R- Better hover effect (shader instead of white color?
 (DONE) R- Better selected effect (shader/border/whatever?) and remove red color
 A- Deselect when clicking non-country
-A- Remove the countries not in consideration from map? We can then use the dark grey color for selection.
+A- Remove the countries not in consideration from map (as in fill them with background color)? We can then use the dark grey color for selection.
 - DONE fix center worldmap
 
 # Slide 1:
@@ -39,3 +39,6 @@ R- Add hover/selected effects to LoadingBarChart
 know, go wild hehe
 (DONE) R- Add a title to the chart that shows exactly for what year and country it is currently showing, regarding getting the
 full country name, see the point above, just add a temp string if you can't get it.
+
+# Report:
+We can write about creating the visualising components (specifically, the world map)?

@@ -93,11 +93,31 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
     const getFeature =
         selectedYear === 'growth'
             ? (d: any) =>
-                  d.equalityData &&
-                  d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')]
+                d.equalityData &&
+                d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')]
             : (d: any) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     // const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData
+
+    const findGradientColors = {
+        'gender_equality_index' : ['hsl(279, 0%, 100%)', 'hsl(279, 100%, 40%)'],
+        'work': ['hsl(317, 0%, 100%)', 'hsl(317, 100%, 35%)'],
+        'money': ['hsl(89, 0%, 100%)', 'hsl(89, 100%, 36%)'],
+        'knowledge': ['hsl(227, 0%, 100%)', 'hsl(227, 100%, 40%)'],
+        'time': ['hsl(26, 0%, 100%)', 'hsl(26, 100%, 50%)'],
+        'power': ['hsl(1, 0%, 100%)', 'hsl(1, 100%, 50%)'],
+        'health': ['hsl(52, 0%, 100%)', 'hsl(52, 100%, 48%)'],
+    }
+
+    const mapText = {
+        'gender_equality_index' : 'GEI',
+        'work': 'WORK',
+        'money': 'MONEY',
+        'knowledge': 'KNOWLEDGE',
+        'time': 'TIME',
+        'power': 'POWER',
+        'health': 'HEALTH',
+    }
 
     useEffect(() => {
         // Load initial data
@@ -126,13 +146,13 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                 features: geoData.features.map((d: ICountry) =>
                     selected && d.properties.iso_a3 === selected.properties.iso_a3
                         ? {
-                              ...d,
-                              selected: true,
-                          }
+                            ...d,
+                            selected: true,
+                        }
                         : {
-                              ...d,
-                              selected: false,
-                          },
+                            ...d,
+                            selected: false,
+                        },
                 ),
             })
         }
@@ -157,24 +177,49 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .append('rect')
                         .attr('x', 0)
                         .attr('y', 0)
-                    
-                    const yeartext = svg.append('text').text(selectedYear)
-                        .attr('x', 50)
-                        .attr('y', 50)
+
+                    const infotext = svg.append('text')
+                        .attr('x', 20)
+                        .attr('y', 30)
                         .attr('fill', 'black')
-                    
-                    const featuretext = svg.append('text').text(selectedFeature)
-                        .attr('x', 50)
-                        .attr('y', 75)
+                        .attr('font-weight', 'bold')
+
+                    const linearGradient = svg.append("defs")
+                        .append("linearGradient")
+                        .attr("id", "linear-gradient")
+
+                    linearGradient
+                        .attr("x1", "0%")
+                        .attr("y1", "0%")
+                        .attr("x2", "100%")
+                        .attr("y2", "0%");
+
+                    svg.append("rect")
+                        .attr("width", 150)
+                        .attr("height", 5)
+                        .style("fill", "url(#linear-gradient)")
+                        .attr('x', 20)
+                        .attr('y', 50);
+
+                    const zeroText = svg.append('text').text('0')
+                        .attr('x', 20)
+                        .attr('y', 70)
+                        .attr('fill', 'black')
+
+                    const hundText = svg.append('text').text('100')
+                        .attr('x', 150)
+                        .attr('y', 70)
                         .attr('fill', 'black')
 
                     setElement('rectangle', rectangle)
                     setElement('countriesGroup', countriesGroup)
-                    setElement('yeartext', yeartext)
-                    setElement('featuretext', featuretext)
+                    setElement('infotext', infotext)
+                    setElement('linearGradient', linearGradient)
+                    setElement('zeroText', zeroText)
+                    setElement('hundText', hundText)
 
                 }}
-                render={(svg, data: IGeoData, { countriesGroup, rectangle }) => {
+                render={(svg, data: IGeoData, { countriesGroup, rectangle, infotext, linearGradient }) => {
                     if (!countriesGroup) {
                         return
                     }
@@ -214,6 +259,18 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                                 setSelected(d)
                             }
                         })
+                    
+                    infotext.text(mapText[selectedFeature] + ' (' + selectedYear + ')');
+                    
+                    linearGradient.selectAll("*").remove();
+
+                    linearGradient.append("stop")
+                        .attr("offset", "0%")
+                        .attr("stop-color", findGradientColors[selectedFeature][0]);
+
+                    linearGradient.append("stop")
+                        .attr("offset", "100%")
+                        .attr("stop-color", findGradientColors[selectedFeature][1]);
                 }}
             />
         </StyledMap>

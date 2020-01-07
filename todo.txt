@@ -4,8 +4,8 @@ A- Arrow key navigation
 
 # Worldmap:
 R- labels with index for country on hover
-R- Legend for the worldmap (bottom right showing scale bands for each of the 5 colors?)
-(PARTIAL : TEXT DOES NOT CHANGE)R- Title on top left showing: <FEATURE> - <YEAR/Growth>
+(DONE) R- Legend for the worldmap (bottom right showing scale bands for each of the 5 colors?)
+(DONE) R- Title on top left showing: <FEATURE> - <YEAR/Growth>
 (DONE) R- Better hover effect (shader instead of white color?
 (DONE) R- Better selected effect (shader/border/whatever?) and remove red color
 A- Deselect when clicking non-country

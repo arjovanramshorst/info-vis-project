@@ -80,27 +80,27 @@ const colorRange = (feature: GenderEqualityFeature) => {
 }
 
 export const WorldMap = ({
-    selected,
-    setSelected,
-    selectedFeature,
-    selectedYear,
-    geoData,
-    setGeoData,
-    ...props
-}: IWorldMap) => {
+                             selected,
+                             setSelected,
+                             selectedFeature,
+                             selectedYear,
+                             geoData,
+                             setGeoData,
+                             ...props
+                         }: IWorldMap) => {
     const [d3Container, width, height] = useResizableHook()
 
     const getFeature =
         selectedYear === 'growth'
             ? (d: ICountry) =>
-                  d.equalityData &&
-                  Math.round(
-                      d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
-                  )
+            d.equalityData &&
+            Math.round(
+                d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
+            )
             : selectedYear === 'reachEquality'
             ? (d: ICountry) =>
-                  d.equalityData &&
-                  reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
+                d.equalityData &&
+                reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
             : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     useEffect(() => {
@@ -111,13 +111,13 @@ export const WorldMap = ({
                 features: geoData.features.map((d: ICountry) =>
                     selected && d.properties.iso_a3 === selected.properties.iso_a3
                         ? {
-                              ...d,
-                              selected: true,
-                          }
+                            ...d,
+                            selected: true,
+                        }
                         : {
-                              ...d,
-                              selected: false,
-                          },
+                            ...d,
+                            selected: false,
+                        },
                 ),
             })
         }
@@ -221,22 +221,17 @@ export const WorldMap = ({
                     const domain = ['2005', '2010', '2015'].includes(selectedYear)
                         ? getRange(selectedFeature)
                         : ([
-                              // @ts-ignore
-                              d3.min(data.features, getFeature) || 0,
-                              // @ts-ignore
-                              d3.max(data.features, getFeature) || 100,
-                          ] as [number, number])
+                            // @ts-ignore
+                            d3.min(data.features, getFeature) || 0,
+                            // @ts-ignore
+                            d3.max(data.features, getFeature) || 100,
+                        ] as [number, number])
 
                     const color = d3
                         .scaleQuantize()
                         .domain(domain)
                         // @ts-ignore
-                        .range(
-                            selectedYear === 'reachEquality'
-                                ? colorRange(selectedFeature)
-                                      .slice()
-                                      .reverse()
-                                : colorRange(selectedFeature),
+                        .range(selectedYear === 'reachEquality' ? colorRange(selectedFeature).slice().reverse() : colorRange(selectedFeature),
                         )
 
                     countries
@@ -264,7 +259,7 @@ export const WorldMap = ({
                                     .html(
                                         `${d.properties.name} (${selectedYear})<br /> ${
                                             MAPTEXT[selectedFeature]
-                                        }: <strong>${getFeature(d) || 'Negative growth'}</strong>`,
+                                            }: <strong>${getFeature(d) || 'Negative growth'}</strong>`,
                                     )
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY - 28 + 'px')

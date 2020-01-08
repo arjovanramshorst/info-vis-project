@@ -6,10 +6,12 @@ import classNames from 'classnames'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
 import {
-    COLORSCALE, genderEqualityData,
+    COLORSCALE,
+    genderEqualityData,
     GenderEqualityFeature,
     GenderEqualityYear,
     getKey,
+    getRange,
     MAPTEXT,
     reachEquality,
 } from '../../data/dataset'
@@ -77,28 +79,27 @@ const colorRange = (feature: GenderEqualityFeature) => {
     return COLORSCALE[feature]
 }
 
-
 export const WorldMap = ({
-    selected,
-    setSelected,
-    selectedFeature,
-    selectedYear,
-    geoData,
-    setGeoData,
-    ...props
-}: IWorldMap) => {
+                             selected,
+                             setSelected,
+                             selectedFeature,
+                             selectedYear,
+                             geoData,
+                             setGeoData,
+                             ...props
+                         }: IWorldMap) => {
     const [d3Container, width, height] = useResizableHook()
 
     const getFeature =
         selectedYear === 'growth'
             ? (d: ICountry) =>
-                  d.equalityData &&
-                  Math.round(
-                      d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
-                  )
+            d.equalityData &&
+            Math.round(
+                d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
+            )
             : selectedYear === 'reachEquality'
-                ? (d: ICountry) => d.equalityData && reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
-                : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
+            ? (d: ICountry) => d.equalityData && reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
+            : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     useEffect(() => {
         // Update selected
@@ -108,13 +109,13 @@ export const WorldMap = ({
                 features: geoData.features.map((d: ICountry) =>
                     selected && d.properties.iso_a3 === selected.properties.iso_a3
                         ? {
-                              ...d,
-                              selected: true,
-                          }
+                            ...d,
+                            selected: true,
+                        }
                         : {
-                              ...d,
-                              selected: false,
-                          },
+                            ...d,
+                            selected: false,
+                        },
                 ),
             })
         }
@@ -160,30 +161,28 @@ export const WorldMap = ({
 
                     svg.append('rect')
                         .attr('width', 150)
-                        .attr('height', 5)
+                        .attr('height', 8)
                         .style('fill', 'url(#linear-gradient)')
                         .attr('x', 20)
                         .attr('y', 50)
 
                     const zeroText = svg
                         .append('text')
-                        .text('0')
                         .attr('x', 20)
                         .attr('y', 70)
                         .attr('fill', 'black')
 
                     const hundText = svg
                         .append('text')
-                        .text('100')
                         .attr('x', 150)
                         .attr('y', 70)
                         .attr('fill', 'black')
 
                     const tooltip = d3
                         .select('.tooltip')
-                        // .append('div')
-                        // .attr('class', 'tooltip')
-                        // .style('opacity', 0)
+                    // .append('div')
+                    // .attr('class', 'tooltip')
+                    // .style('opacity', 0)
                     setElement('tooltip', tooltip)
 
                     setElement('rectangle', rectangle)
@@ -218,14 +217,18 @@ export const WorldMap = ({
 
                     const path = d3Path(width, height)
 
+                    const domain = ['2005', '2010', '2015'].includes(selectedYear)
+                        ? getRange(selectedFeature)
+                        : [
+                            // @ts-ignore
+                            d3.min(data.features, getFeature) || 0,
+                            // @ts-ignore
+                            d3.max(data.features, getFeature) || 100,
+                        ] as [number, number]
+
                     const color = d3
                         .scaleQuantize()
-                        .domain([
-                            // @ts-ignore
-                            d3.min(data.features, getFeature),
-                            // @ts-ignore
-                            d3.max(data.features, getFeature),
-                        ])
+                        .domain(domain)
                         // @ts-ignore
                         .range(colorRange(selectedFeature))
 
@@ -266,8 +269,8 @@ export const WorldMap = ({
                         })
 
                     infotext.text(MAPTEXT[selectedFeature] + ' (' + selectedYear + ')')
-                    zeroText.text(d3.min(data.features, getFeature))
-                    hundText.text(d3.max(data.features, getFeature))
+                    zeroText.text(domain[0])
+                    hundText.text(domain[1])
 
                     linearGradient.selectAll('*').remove()
 

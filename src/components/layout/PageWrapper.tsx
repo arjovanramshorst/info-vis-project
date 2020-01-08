@@ -54,12 +54,13 @@ const PageWrapper = () => {
 
     const [feature, setFeature] = useState('gender_equality_index' as GenderEqualityFeature)
     const [year, setYear] = useState('2005' as GenderEqualityYear)
+    const [countryCodeToCountry, setCountryCodeToCountry] = useState({} as Record<string, ICountry>)
 
     useEffect(() => {
         // Load initial data
         if (!geoData) {
             d3.json(url('/assets/custom.geo.json')).then(json => {
-                const mergedFeatures = json.features.map((feature: any) => {
+                const mergedFeatures: ICountry[] = json.features.map((feature: any) => {
                     const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
                     if (genderEqualityData[countryKey]) {
                         return {
@@ -70,11 +71,20 @@ const PageWrapper = () => {
                     return feature
                 })
                 setGeoData({ features: mergedFeatures })
+                setCountryCodeToCountry(
+                    mergedFeatures
+                        .filter((d: ICountry) => d.equalityData)
+                        .reduce((agg: Record<string, ICountry>, d: ICountry) => {
+                            agg[d.properties.iso_a2] = d
+
+                            return agg
+                        }, {})
+                )
             })
         }
     })
 
-    const slideProps = { country, setCountry, year, setYear, feature, setFeature }
+    const slideProps = { country, setCountry, year, setYear, feature, setFeature, countryCodeToCountry }
 
     return (
         <div>

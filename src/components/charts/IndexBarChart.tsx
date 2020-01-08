@@ -1,11 +1,20 @@
 import * as React from 'react'
 import * as d3 from 'd3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { COLORS, genderEqualityData, GenderEqualityFeature, GenderEqualityYear, getKey } from '../../data/dataset'
+import {
+    COLORS,
+    genderEqualityData,
+    GenderEqualityFeature,
+    GenderEqualityYear,
+    getKey,
+    MAPTEXT,
+} from '../../data/dataset'
 import styled from 'styled-components'
+import { ICountry } from '../layout/PageWrapper'
 
 interface IIndexBarChart {
     sort: (a: { key: string; value: number }, b: { key: string; value: number }) => number
+    countryCodeToCountry: Record<string, ICountry>
     feature: GenderEqualityFeature
     year: GenderEqualityYear
     from?: number
@@ -32,7 +41,7 @@ const StyledIndexBarChart = styled.div`
     }
 `
 
-const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature, year, from = 0, to = 100 }) => {
+const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToCountry, sort, feature, year, from = 0, to = 100 }) => {
     const [d3Container, width, height] = useResizableHook()
 
     const { ['EU-28']: eu, ...withoutEu } = genderEqualityData
@@ -41,14 +50,15 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
+
     const countryKeys = Object.keys(withoutEu) as Array<keyof typeof withoutEu>
 
     const data = countryKeys
         .map(countryKey => ({
-            key: countryKey,
+            key: countryCodeToCountry[countryKey] ? countryCodeToCountry[countryKey].properties.name : countryKey,
             value:
                 year === 'growth'
-                    ? withoutEu[countryKey][getKey(feature, '2015')] - withoutEu[countryKey][getKey(feature, '2005')]
+                    ? Math.round(withoutEu[countryKey][getKey(feature, '2015')] - withoutEu[countryKey][getKey(feature, '2005')])
                     : withoutEu[countryKey][getKey(feature, year)],
         }))
         .sort(sort)
@@ -90,6 +100,13 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
 
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
+                    const tooltip = d3
+                        .select('body')
+                        .append('div')
+                        .attr('class', 'tooltip')
+                        .style('opacity', 0)
+
+                    setElement('tooltip', tooltip)
                     setElement('group', group)
                     setElement('background', background)
                     setElement('xScale', xScale)
@@ -97,7 +114,7 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                     setElement('axisBottom', axisBottom)
                     setElement('axisLeft', axisLeft)
                 }}
-                render={(svg, data, { group, background, xScale, yScale, axisBottom, axisLeft }) => {
+                render={(svg, data, { group, background, xScale, yScale, tooltip }) => {
                     if (!group || !background) {
                         return
                     }
@@ -116,6 +133,24 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                         .append('g')
                         .attr('class', 'bar')
                         .attr('transform', (d: any) => `translate(${xScale(d.key)},0)`)
+                        .on('mouseover', (d: any) => {
+                            tooltip
+                                .transition()
+                                .duration(200)
+                                .style('opacity', 0.9)
+                            tooltip
+                                .html(
+                                    `${d.key} (${year})<br /> ${MAPTEXT[feature]}: <strong>${d.value}</strong>`,
+                                )
+                                .style('left', d3.event.pageX + 'px')
+                                .style('top', d3.event.pageY - 28 + 'px')
+                        })
+                        .on('mouseout', (d: ICountry) => {
+                            tooltip
+                                .transition()
+                                .duration(500)
+                                .style('opacity', 0)
+                        })
 
                     bar.append('rect')
                         .attr('y', (d: any) => Math.min(yScale(0), yScale(d.value)))

@@ -1,7 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { countryCode, GenderEqualityFeature, GenderEqualityYear, getPropertiesAsArray } from '../../data/dataset'
+import {
+    countryCode,
+    GenderEqualityFeature,
+    GenderEqualityYear,
+    getPropertiesAsArray,
+    MAPTEXT,
+} from '../../data/dataset'
 import * as d3 from 'd3'
 import { ICountry } from '../layout/PageWrapper'
 
@@ -17,6 +23,18 @@ const StyledLoadingBarChart = styled.div`
 
     .background {
         fill: #f0f2f5; /* chart background colour */
+    }
+    
+    .bar {
+        cursor: pointer;
+        &:hover {
+            // fill: #ffffff; /* hover colour */
+            // filter: brightness(110%);
+            // fill:brightness(110%);
+            background-color: #000000;
+            opacity: 0.75;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
     }
 `
 
@@ -34,7 +52,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                 ? feature.values.index['2015'] - feature.values.index['2005']
                 : feature.values.index[year],
         color: feature.color,
-        feature: feature.feature,
+        feature: feature.feature as GenderEqualityFeature,
     }))
 
     return (
@@ -67,6 +85,14 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
 
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
+                    const tooltip = d3
+                        .select('body')
+                        .append('div')
+                        .attr('class', 'tooltip')
+                        .style('opacity', 0)
+
+                    setElement('tooltip', tooltip)
+
                     setElement('group', group)
                     setElement('background', background)
                     setElement('xScale', xScale)
@@ -74,7 +100,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                     setElement('axisLeft', axisLeft)
                     setElement('axisBottom', axisBottom)
                 }}
-                render={(svg, data, { group, background, xScale, yScale, axisBottom, axisLeft }) => {
+                render={(svg, data, { group, background, xScale, yScale, tooltip }) => {
                     if (!group || !background || !xScale || !yScale) {
                         return
                     }
@@ -89,17 +115,33 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
 
                     const bar = barGroup
                         .enter()
-                        .call(() => console.log('enter'))
                         .append('g')
 
                     barGroup
                         .exit()
-                        .call(() => console.log('exit'))
                         .remove()
 
                     bar.attr('class', 'bar')
                         .attr('transform', (d: any) => `translate(0, ${yScale(d.key)})`)
-                        .on('click', (d: any) => setFeature(d.feature))
+                        .on('click', (d: typeof data[0]) => setFeature(d.feature))
+                        .on('mouseover', (d: typeof data[0]) => {
+                            tooltip
+                                .transition()
+                                .duration(200)
+                                .style('opacity', 0.9)
+                            tooltip
+                                .html(
+                                    `${country ? country.properties.name : 'EU'} (${year})<br /> ${MAPTEXT[d.feature]}: <strong>${d.value}</strong>`,
+                                )
+                                .style('left', d3.event.pageX + 'px')
+                                .style('top', d3.event.pageY - 28 + 'px')
+                        })
+                        .on('mouseout', (d: ICountry) => {
+                            tooltip
+                                .transition()
+                                .duration(500)
+                                .style('opacity', 0)
+                        })
 
                     bar.append('rect').attr('class', 'rect')
 

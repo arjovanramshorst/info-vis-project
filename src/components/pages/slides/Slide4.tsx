@@ -9,7 +9,7 @@ import YearSelect from '../../layout/components/YearSelect'
 
 interface ISlide4 extends ISlideProps {}
 
-const Slide4: React.FunctionComponent<ISlide4> = ({ setYear, setFeature, feature, year }) => {
+const Slide4: React.FunctionComponent<ISlide4> = ({ setYear, setFeature, feature, year, countryCodeToCountry }) => {
     useEffect(() => {
         setYear('2015')
         setFeature('gender_equality_index')
@@ -28,7 +28,7 @@ const Slide4: React.FunctionComponent<ISlide4> = ({ setYear, setFeature, feature
                     <YearSelect year={year} setYear={setYear} />
                 </span>
             </SlideText>
-            <IndexBarChart sort={(a, b) => a.value - b.value} feature={feature} year={year} />
+            <IndexBarChart sort={(a, b) => a.value - b.value} feature={feature} year={year} countryCodeToCountry={countryCodeToCountry} />
         </div>
     )
 }

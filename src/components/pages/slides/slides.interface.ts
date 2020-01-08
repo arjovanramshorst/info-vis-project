@@ -8,4 +8,5 @@ export interface ISlideProps {
     feature: GenderEqualityFeature
     country: ICountry | null
     setCountry: (country: ICountry | null) => void
+    countryCodeToCountry: Record<string, ICountry>
 }

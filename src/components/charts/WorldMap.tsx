@@ -5,7 +5,7 @@ import * as d3 from 'd3'
 import classNames from 'classnames'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { COLORSCALE, GenderEqualityFeature, GenderEqualityYear, getKey } from '../../data/dataset'
+import { COLORSCALE, GenderEqualityFeature, GenderEqualityYear, getKey, MAPTEXT } from '../../data/dataset'
 import { ICountry, IGeoData } from '../layout/PageWrapper'
 
 interface IWorldMap {
@@ -70,15 +70,6 @@ const colorRange = (feature: GenderEqualityFeature) => {
     return COLORSCALE[feature]
 }
 
-const mapText = {
-    gender_equality_index: 'GEI',
-    work: 'WORK',
-    money: 'MONEY',
-    knowledge: 'KNOWLEDGE',
-    time: 'TIME',
-    power: 'POWER',
-    health: 'HEALTH',
-}
 
 export const WorldMap = ({
     selected,
@@ -184,6 +175,7 @@ export const WorldMap = ({
                         .append('div')
                         .attr('class', 'tooltip')
                         .style('opacity', 0)
+                    setElement('tooltip', tooltip)
 
                     setElement('rectangle', rectangle)
                     setElement('countriesGroup', countriesGroup)
@@ -191,7 +183,6 @@ export const WorldMap = ({
                     setElement('linearGradient', linearGradient)
                     setElement('zeroText', zeroText)
                     setElement('hundText', hundText)
-                    setElement('tooltip', tooltip)
                 }}
                 render={(
                     svg,
@@ -250,7 +241,7 @@ export const WorldMap = ({
                                     .style('opacity', 0.9)
                                 tooltip
                                     .html(
-                                        `${d.properties.name}<br /> ${selectedFeature}: <strong>${getFeature(
+                                        `${d.properties.name} (${selectedYear})<br /> ${MAPTEXT[selectedFeature]}: <strong>${getFeature(
                                             d,
                                         )}</strong>`,
                                     )
@@ -265,7 +256,7 @@ export const WorldMap = ({
                                 .style('opacity', 0)
                         })
 
-                    infotext.text(mapText[selectedFeature] + ' (' + selectedYear + ')')
+                    infotext.text(MAPTEXT[selectedFeature] + ' (' + selectedYear + ')')
                     zeroText.text(d3.min(data.features, getFeature))
                     hundText.text(d3.max(data.features, getFeature))
 

@@ -2,7 +2,7 @@
 This file can contain the preprocessed data set so it can be used by d3 or whatever we choose.
  */
 
-import { ICountry } from '../components/layout/PageWrapper'
+import { ICountry, IGeoData } from '../components/layout/PageWrapper'
 
 export interface IGenderEqualityData {
     gender_equality_index_2005: number
@@ -62,21 +62,20 @@ export const COLORSCALE: Record<GenderEqualityFeature, string[]> = {
     health: mapColor(52),
 }
 
-export const COLORS_FROM: Record<GenderEqualityFeature, string> = {
-    gender_equality_index: 'hsl(279, 30%, 40%)',
-    work: 'hsl(317, 30%, 35%)',
-    money: 'hsl(89, 30%, 36%)',
-    knowledge: 'hsl(227, 30%, 40%)',
-    time: 'hsl(26, 30%, 50%)',
-    power: 'hsl(1, 30%, 50%)',
-    health: 'hsl(52, 30%, 48%)',
-}
-
 export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear) =>
     `${feature}_${year}` as keyof IGenderEqualityData
 
 export const countryCode = (country: ICountry | null) =>
     (country ? country.properties.iso_a2 : 'EU-28') as keyof typeof genderEqualityData
+
+export const countryCodeToName = (code: string, geoData: IGeoData) => {
+    const country = geoData.features.find(d => d.properties.iso_a2 === code)
+    if (country) {
+        return country.properties.name
+    }
+
+    return ''
+}
 
 export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) => [
     {
@@ -142,6 +141,16 @@ export const getValuesForCountry = (feature: GenderEqualityFeature, country: key
         index,
         growth: predictedGrowthKeys.map((key, index) => ({ key, value: predictedGrowthValues[index] })),
     }
+}
+
+export const MAPTEXT = {
+    gender_equality_index: 'GEI',
+    work: 'WORK',
+    money: 'MONEY',
+    knowledge: 'KNOWLEDGE',
+    time: 'TIME',
+    power: 'POWER',
+    health: 'HEALTH',
 }
 
 export const genderEqualityData = {
@@ -329,7 +338,7 @@ export const genderEqualityData = {
         health_2010: 90.7,
         health_2015: 90.6,
     },
-    EL: {
+    GR: {
         gender_equality_index_2005: 46.8,
         gender_equality_index_2010: 48.6,
         gender_equality_index_2015: 50,

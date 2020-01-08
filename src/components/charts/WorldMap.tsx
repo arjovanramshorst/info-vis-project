@@ -80,25 +80,27 @@ const colorRange = (feature: GenderEqualityFeature) => {
 }
 
 export const WorldMap = ({
-                             selected,
-                             setSelected,
-                             selectedFeature,
-                             selectedYear,
-                             geoData,
-                             setGeoData,
-                             ...props
-                         }: IWorldMap) => {
+    selected,
+    setSelected,
+    selectedFeature,
+    selectedYear,
+    geoData,
+    setGeoData,
+    ...props
+}: IWorldMap) => {
     const [d3Container, width, height] = useResizableHook()
 
     const getFeature =
         selectedYear === 'growth'
             ? (d: ICountry) =>
-            d.equalityData &&
-            Math.round(
-                d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
-            )
+                  d.equalityData &&
+                  Math.round(
+                      d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
+                  )
             : selectedYear === 'reachEquality'
-            ? (d: ICountry) => d.equalityData && reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
+            ? (d: ICountry) =>
+                  d.equalityData &&
+                  reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
             : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     useEffect(() => {
@@ -109,13 +111,13 @@ export const WorldMap = ({
                 features: geoData.features.map((d: ICountry) =>
                     selected && d.properties.iso_a3 === selected.properties.iso_a3
                         ? {
-                            ...d,
-                            selected: true,
-                        }
+                              ...d,
+                              selected: true,
+                          }
                         : {
-                            ...d,
-                            selected: false,
-                        },
+                              ...d,
+                              selected: false,
+                          },
                 ),
             })
         }
@@ -178,8 +180,7 @@ export const WorldMap = ({
                         .attr('y', 70)
                         .attr('fill', 'black')
 
-                    const tooltip = d3
-                        .select('.tooltip')
+                    const tooltip = d3.select('.tooltip')
                     // .append('div')
                     // .attr('class', 'tooltip')
                     // .style('opacity', 0)
@@ -219,25 +220,33 @@ export const WorldMap = ({
 
                     const domain = ['2005', '2010', '2015'].includes(selectedYear)
                         ? getRange(selectedFeature)
-                        : [
-                            // @ts-ignore
-                            d3.min(data.features, getFeature) || 0,
-                            // @ts-ignore
-                            d3.max(data.features, getFeature) || 100,
-                        ] as [number, number]
+                        : ([
+                              // @ts-ignore
+                              d3.min(data.features, getFeature) || 0,
+                              // @ts-ignore
+                              d3.max(data.features, getFeature) || 100,
+                          ] as [number, number])
 
                     const color = d3
                         .scaleQuantize()
                         .domain(domain)
                         // @ts-ignore
-                        .range(selectedYear === 'reachEquality' ? colorRange(selectedFeature).slice().reverse() : colorRange(selectedFeature))
+                        .range(
+                            selectedYear === 'reachEquality'
+                                ? colorRange(selectedFeature)
+                                      .slice()
+                                      .reverse()
+                                : colorRange(selectedFeature),
+                        )
 
                     countries
                         .attr('d', path)
                         .attr('class', (d: ICountry) =>
                             classNames('country', d.selected && 'country-selected', d.equalityData && 'selectable'),
                         )
-                        .attr('fill', (d: ICountry) => (d.equalityData ? (getFeature(d) ? color(getFeature(d)) : 'rgba(0,0,0,0.3') : '#4b5358'))
+                        .attr('fill', (d: ICountry) =>
+                            d.equalityData ? (getFeature(d) ? color(getFeature(d)) : 'rgba(0,0,0,0.3') : '#4b5358',
+                        )
                         .on('click', (d: ICountry) => {
                             if (d.equalityData) {
                                 setSelected(d)
@@ -253,9 +262,9 @@ export const WorldMap = ({
                                     .style('opacity', 0.9)
                                 tooltip
                                     .html(
-                                        `${d.properties.name} (${selectedYear})<br /> ${MAPTEXT[selectedFeature]}: <strong>${getFeature(
-                                            d,
-                                        ) || 'Negative growth'}</strong>`,
+                                        `${d.properties.name} (${selectedYear})<br /> ${
+                                            MAPTEXT[selectedFeature]
+                                        }: <strong>${getFeature(d) || 'Negative growth'}</strong>`,
                                     )
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY - 28 + 'px')
@@ -282,7 +291,7 @@ export const WorldMap = ({
                     linearGradient
                         .append('stop')
                         .attr('offset', '100%')
-                        .attr('stop-color', colorRange(selectedFeature)[selectedYear === 'reachEquality' ? 0: 4])
+                        .attr('stop-color', colorRange(selectedFeature)[selectedYear === 'reachEquality' ? 0 : 4])
                 }}
             />
         </StyledMap>

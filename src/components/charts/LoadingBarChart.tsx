@@ -25,7 +25,7 @@ const StyledLoadingBarChart = styled.div`
     .background {
         fill: #f0f2f5; /* chart background colour */
     }
-    
+
     .bar {
         cursor: pointer;
         &:hover {
@@ -38,7 +38,7 @@ const StyledLoadingBarChart = styled.div`
         }
         .rect {
             stroke-width: 3;
-            transition: stroke 400ms ease-in-out
+            transition: stroke 400ms ease-in-out;
         }
     }
 `
@@ -94,8 +94,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
 
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
-                    const tooltip = d3
-                        .select('.tooltip')
+                    const tooltip = d3.select('.tooltip')
 
                     setElement('tooltip', tooltip)
 
@@ -119,13 +118,9 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                     group.selectAll('*').remove()
                     const barGroup = group.selectAll('.bar').data(data)
 
-                    const bar = barGroup
-                        .enter()
-                        .append('g')
+                    const bar = barGroup.enter().append('g')
 
-                    barGroup
-                        .exit()
-                        .remove()
+                    barGroup.exit().remove()
 
                     bar.attr('class', 'bar')
                         .attr('transform', (d: any) => `translate(0, ${yScale(d.key)})`)
@@ -137,7 +132,9 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                                 .style('opacity', 0.9)
                             tooltip
                                 .html(
-                                    `${country ? country.properties.name : 'EU'} (${year})<br /> ${MAPTEXT[d.feature]}: <strong>${d.value}</strong>`,
+                                    `${country ? country.properties.name : 'EU'} (${year})<br /> ${
+                                        MAPTEXT[d.feature]
+                                    }: <strong>${d.value}</strong>`,
                                 )
                                 .style('left', d3.event.pageX + 'px')
                                 .style('top', d3.event.pageY - 28 + 'px')
@@ -157,7 +154,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                         })
                         .attr('height', yScale.bandwidth())
                         .attr('fill', (d: any) => d.color)
-                        .attr('stroke', (d: any) => d.feature === feature ? 'rgba(0,0,0,0.75)' : d.color)
+                        .attr('stroke', (d: any) => (d.feature === feature ? 'rgba(0,0,0,0.75)' : d.color))
 
                     group
                         .append('g')

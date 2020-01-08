@@ -41,7 +41,14 @@ const StyledIndexBarChart = styled.div`
     }
 `
 
-const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToCountry, sort, feature, year, from = 0, to = 100 }) => {
+const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({
+    countryCodeToCountry,
+    sort,
+    feature,
+    year,
+    from = 0,
+    to = 100,
+}) => {
     const [d3Container, width, height] = useResizableHook()
 
     const { ['EU-28']: eu, ...withoutEu } = genderEqualityData
@@ -50,7 +57,6 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToC
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
-
     const countryKeys = Object.keys(withoutEu) as Array<keyof typeof withoutEu>
 
     const data = countryKeys
@@ -58,7 +64,10 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToC
             key: countryCodeToCountry[countryKey] ? countryCodeToCountry[countryKey].properties.name : countryKey,
             value:
                 year === 'growth'
-                    ? Math.round(withoutEu[countryKey][getKey(feature, '2015')] - withoutEu[countryKey][getKey(feature, '2005')])
+                    ? Math.round(
+                          withoutEu[countryKey][getKey(feature, '2015')] -
+                              withoutEu[countryKey][getKey(feature, '2005')],
+                      )
                     : withoutEu[countryKey][getKey(feature, year)],
         }))
         .sort(sort)
@@ -100,11 +109,10 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToC
 
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
-                    const tooltip = d3
-                        .select('.tooltip')
-                        // .append('div')
-                        // .attr('class', 'tooltip')
-                        // .style('opacity', 0)
+                    const tooltip = d3.select('.tooltip')
+                    // .append('div')
+                    // .attr('class', 'tooltip')
+                    // .style('opacity', 0)
 
                     setElement('tooltip', tooltip)
                     setElement('group', group)
@@ -139,9 +147,7 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToC
                                 .duration(200)
                                 .style('opacity', 0.9)
                             tooltip
-                                .html(
-                                    `${d.key} (${year})<br /> ${MAPTEXT[feature]}: <strong>${d.value}</strong>`,
-                                )
+                                .html(`${d.key} (${year})<br /> ${MAPTEXT[feature]}: <strong>${d.value}</strong>`)
                                 .style('left', d3.event.pageX + 'px')
                                 .style('top', d3.event.pageY - 28 + 'px')
                         })

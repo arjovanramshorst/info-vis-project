@@ -78,7 +78,7 @@ const PageWrapper = () => {
                             agg[d.properties.iso_a2] = d
 
                             return agg
-                        }, {})
+                        }, {}),
                 )
             })
         }

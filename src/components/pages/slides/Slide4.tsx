@@ -28,7 +28,12 @@ const Slide4: React.FunctionComponent<ISlide4> = ({ setYear, setFeature, feature
                     <YearSelect year={year} setYear={setYear} />
                 </span>
             </SlideText>
-            <IndexBarChart sort={(a, b) => a.value - b.value} feature={feature} year={year} countryCodeToCountry={countryCodeToCountry} />
+            <IndexBarChart
+                sort={(a, b) => a.value - b.value}
+                feature={feature}
+                year={year}
+                countryCodeToCountry={countryCodeToCountry}
+            />
         </div>
     )
 }

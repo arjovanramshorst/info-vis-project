@@ -5,8 +5,7 @@ import { SlideText, SlideTitle } from './slides.components'
 import LoadingBarChart from '../../charts/LoadingBarChart'
 import { useEffect } from 'react'
 
-interface ISlide7 extends ISlideProps {
-}
+interface ISlide7 extends ISlideProps {}
 
 const Slide7: React.FunctionComponent<ISlide7> = ({ country, year, setYear, feature, setFeature }) => {
     useEffect(() => {

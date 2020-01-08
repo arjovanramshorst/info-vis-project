@@ -23,10 +23,10 @@ const StyledGrowthChart = styled.div`
     }
     .country {
         cursor: pointer;
-        
+
         &:hover {
             text {
-                fill: rgba(0,0,0,0.6)
+                fill: rgba(0, 0, 0, 0.6);
             }
         }
     }
@@ -38,10 +38,10 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({ countryCodeToCount
     const reachData = (Object.keys(genderEqualityData) as Array<keyof typeof genderEqualityData>)
         .map(country => ({
             key: countryCodeToCountry[country] ? countryCodeToCountry[country].properties.name : country,
-            value: reachEquality('gender_equality_index', country)
+            value: reachEquality('gender_equality_index', country),
         }))
         .filter(d => d.value)
-        .sort((a,b) => (a.value && b.value) ? a.value - b.value : 0)
+        .sort((a, b) => (a.value && b.value ? a.value - b.value : 0))
 
     const margin = { top: 50, right: 50, bottom: 50, left: 50 }
     const innerWidth = width - margin.left - margin.right
@@ -63,19 +63,17 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({ countryCodeToCount
                         .attr('y', 0)
                     const group = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-                    const xAxis = group
-                        .append('g')
+                    const xAxis = group.append('g')
                     setElement('xAxis', xAxis)
 
-                    const tooltip = d3
-                        .select('.tooltip')
+                    const tooltip = d3.select('.tooltip')
                     setElement('tooltip', tooltip)
 
                     setElement('group', group)
 
                     setElement('background', background)
                 }}
-                render={(svg, data, { group, background, xAxis, tooltip}) => {
+                render={(svg, data, { group, background, xAxis, tooltip }) => {
                     if (!group || !background) {
                         return
                     }
@@ -92,16 +90,17 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({ countryCodeToCount
                         .enter()
                         .append('g')
                         .attr('class', 'country')
-                        .attr('transform', (d: any, index: number) => `translate(${xScale(d.value)},${index % 6 * 20})`)
+                        .attr(
+                            'transform',
+                            (d: any, index: number) => `translate(${xScale(d.value)},${(index % 6) * 20})`,
+                        )
                         .on('mouseover', (d: any) => {
                             tooltip
                                 .transition()
                                 .duration(200)
                                 .style('opacity', 0.9)
                             tooltip
-                                .html(
-                                    `${d.key}<br /> <strong>${d.value}</strong>`,
-                                )
+                                .html(`${d.key}<br /> <strong>${d.value}</strong>`)
                                 .style('left', d3.event.pageX + 12 + 'px')
                                 .style('top', d3.event.pageY - 28 + 'px')
                         })
@@ -112,25 +111,28 @@ const GrowthChart: React.FunctionComponent<IGrowthChart> = ({ countryCodeToCount
                                 .style('opacity', 0)
                         })
 
-                    countries.append('text')
-                        .html((d: any) => countryCodeToCountry[d.key] ? countryCodeToCountry[d.key].properties.name : d.key)
+                    countries
+                        .append('text')
+                        .html((d: any) =>
+                            countryCodeToCountry[d.key] ? countryCodeToCountry[d.key].properties.name : d.key,
+                        )
 
-                    countries.append('circle')
+                    countries
+                        .append('circle')
                         .attr('r', 2)
                         .attr('cy', 5)
                         .attr('fill', 'black')
 
-                    countries.append('rect')
-                        .attr('class','.line')
+                    countries
+                        .append('rect')
+                        .attr('class', '.line')
                         .attr('opacity', 0.1)
                         .attr('width', '1px')
                         .attr('y', 5)
-                        .attr('height', (d: any, index: number) => `${innerHeight - (index % 6 * 20) - 5}px`)
+                        .attr('height', (d: any, index: number) => `${innerHeight - (index % 6) * 20 - 5}px`)
                         .attr('stroke', 'black')
 
-                    xAxis
-                        .attr('transform', `translate(0,${innerHeight})`)
-                        .call(d3.axisBottom(xScale).ticks(20, 'd'))
+                    xAxis.attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(xScale).ticks(20, 'd'))
                 }}
             />
         </StyledGrowthChart>

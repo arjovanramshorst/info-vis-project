@@ -113,19 +113,18 @@ export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, y
     },
 ]
 
-export const getRange = (feature: GenderEqualityFeature) => (Object.keys(genderEqualityData) as Array<keyof typeof genderEqualityData>)
-    .reduce(([min, max], country) => {
-        const data = [
-            genderEqualityData[country][getKey(feature, '2005')],
-            genderEqualityData[country][getKey(feature, '2010')],
-            genderEqualityData[country][getKey(feature, '2015')],
-        ]
-        return [
-            Math.min(min, ...data),
-            Math.max(max, ...data),
-        ]
-    },
-    [100, 0]) as [number, number]
+export const getRange = (feature: GenderEqualityFeature) =>
+    (Object.keys(genderEqualityData) as Array<keyof typeof genderEqualityData>).reduce(
+        ([min, max], country) => {
+            const data = [
+                genderEqualityData[country][getKey(feature, '2005')],
+                genderEqualityData[country][getKey(feature, '2010')],
+                genderEqualityData[country][getKey(feature, '2015')],
+            ]
+            return [Math.min(min, ...data), Math.max(max, ...data)]
+        },
+        [100, 0],
+    ) as [number, number]
 
 export const getValuesForCountry = (feature: GenderEqualityFeature, country: keyof typeof genderEqualityData) => {
     const index = {
@@ -158,7 +157,7 @@ export const reachEquality = (feature: GenderEqualityFeature, country: keyof typ
         return undefined
     }
 
-    return Math.round(((100 - index2015) / (index2015 - index2010) * 5) + 2015)
+    return Math.round(((100 - index2015) / (index2015 - index2010)) * 5 + 2015)
 }
 
 export const MAPTEXT = {

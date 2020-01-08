@@ -100,7 +100,7 @@ const App: React.FC = () => {
                     <Route exact path="/slides" component={PageWrapper} />
                 </RouterTransitionWrapper>
             </BrowserRouter>
-            <StyledTooltip className={'tooltip'} style={{opacity: 0}} />
+            <StyledTooltip className={'tooltip'} style={{ opacity: 0 }} />
         </React.Fragment>
     )
 }

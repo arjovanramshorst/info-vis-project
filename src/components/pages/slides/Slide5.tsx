@@ -22,7 +22,14 @@ const Slide5: React.FunctionComponent<ISlide5> = ({ setYear, setFeature, feature
                 between 2005 and 2015.
             </SlideText>
             {/*TODO: Add step 5 components here*/}
-            <IndexBarChart sort={(a, b) => b.value - a.value} feature={feature} year={year} from={0} to={30} countryCodeToCountry={countryCodeToCountry} />
+            <IndexBarChart
+                sort={(a, b) => b.value - a.value}
+                feature={feature}
+                year={year}
+                from={0}
+                to={30}
+                countryCodeToCountry={countryCodeToCountry}
+            />
         </div>
     )
 }

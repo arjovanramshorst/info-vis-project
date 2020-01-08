@@ -20,10 +20,10 @@ const SlideshowSteps = ({ step, setStep }: ISlideShowSteps) => {
             <Steps progressDot current={step} onChange={setStep}>
                 <Step title="The gender gap in the EU" description="" />
                 <Step title="We are on our way, but slowly" description="" />
+                <Step title="Core domains" description="" />
                 <Step title="Some countries are doing great" description="" />
                 <Step title="But others are staying behind" description="" />
                 <Step title="A+ for effort" description="" />
-                <Step title="Core domains" description="" />
                 <Step title="See for yourself" description="" />
             </Steps>
 

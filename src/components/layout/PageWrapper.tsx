@@ -121,10 +121,10 @@ const PageWrapper = () => {
                                         <Section style={{ padding: '2.5vw' }}>
                                             {slide === 0 && <Slide1 {...slideProps} />}
                                             {slide === 1 && <Slide2 {...slideProps} />}
-                                            {slide === 2 && <Slide3 {...slideProps} />}
-                                            {slide === 3 && <Slide4 {...slideProps} />}
-                                            {slide === 4 && <Slide5 {...slideProps} />}
-                                            {slide === 5 && <Slide6 {...slideProps} />}
+                                            {slide === 2 && <Slide6 {...slideProps} />}
+                                            {slide === 3 && <Slide3 {...slideProps} />}
+                                            {slide === 4 && <Slide4 {...slideProps} />}
+                                            {slide === 5 && <Slide5 {...slideProps} />}
                                             {slide === 6 && <Slide7 {...slideProps} />}
                                         </Section>
                                     </CSSTransition>

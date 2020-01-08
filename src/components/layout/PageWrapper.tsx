@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Col, Layout, Row } from 'antd'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
+// @ts-ignore
+import KeyboardEventHandler from 'react-keyboard-event-handler'
 import SlideshowSteps from './SlideshowSteps'
 import WorldMap from '../charts/WorldMap'
 import { genderEqualityData, GenderEqualityFeature, GenderEqualityYear, IGenderEqualityData } from '../../data/dataset'
@@ -88,6 +90,10 @@ const PageWrapper = () => {
 
     return (
         <div>
+            <KeyboardEventHandler
+                handleKeys={['left', 'right']}
+                onKeyEvent={(key: string) => key === 'left' ? setSlide(Math.max(slide - 1, 0)) : setSlide(Math.min(slide + 1, 6))}
+            />
             <Layout style={{ backgroundColor: 'white' }}>
                 <SlideshowSteps step={slide} setStep={setSlide} />
                 <Row type="flex" align="middle">

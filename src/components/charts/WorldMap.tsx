@@ -230,7 +230,7 @@ export const WorldMap = ({
                         .scaleQuantize()
                         .domain(domain)
                         // @ts-ignore
-                        .range(colorRange(selectedFeature))
+                        .range(selectedYear === 'reachEquality' ? colorRange(selectedFeature).slice().reverse() : colorRange(selectedFeature))
 
                     countries
                         .attr('d', path)
@@ -277,12 +277,12 @@ export const WorldMap = ({
                     linearGradient
                         .append('stop')
                         .attr('offset', '0%')
-                        .attr('stop-color', colorRange(selectedFeature)[0])
+                        .attr('stop-color', colorRange(selectedFeature)[selectedYear === 'reachEquality' ? 4 : 0])
 
                     linearGradient
                         .append('stop')
                         .attr('offset', '100%')
-                        .attr('stop-color', colorRange(selectedFeature)[4])
+                        .attr('stop-color', colorRange(selectedFeature)[selectedYear === 'reachEquality' ? 0: 4])
                 }}
             />
         </StyledMap>

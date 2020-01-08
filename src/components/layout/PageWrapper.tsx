@@ -4,8 +4,8 @@ import { Col, Layout, Row } from 'antd'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import SlideshowSteps from './SlideshowSteps'
-import WorldMap, { ICountry } from '../charts/WorldMap'
-import { GenderEqualityFeature, GenderEqualityYear } from '../../data/dataset'
+import WorldMap from '../charts/WorldMap'
+import { genderEqualityData, GenderEqualityFeature, GenderEqualityYear, IGenderEqualityData } from '../../data/dataset'
 import Slide1 from '../pages/slides/Slide1'
 import Slide2 from '../pages/slides/Slide2'
 import Slide7 from '../pages/slides/Slide7'
@@ -15,6 +15,9 @@ import Slide4 from '../pages/slides/Slide4'
 import Slide3 from '../pages/slides/Slide3'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Section } from '../../App'
+import { useEffect } from 'react'
+import * as d3 from 'd3'
+import { url } from '../../utils/router'
 
 const StyledLayoutContent = styled(Layout.Content)`
     padding: 50px;
@@ -34,12 +37,42 @@ const StyledArrow = styled.a`
     align-items: center;
 `
 
+export interface ICountry {
+    properties: Record<string, string>
+    selected?: boolean
+    equalityData?: IGenderEqualityData
+}
+
+export interface IGeoData {
+    features: ICountry[]
+}
+
 const PageWrapper = () => {
+    const [geoData, setGeoData] = useState(null as IGeoData | null)
     const [country, setCountry] = useState(null as ICountry | null)
     const [slide, setSlide] = useState(0)
 
     const [feature, setFeature] = useState('gender_equality_index' as GenderEqualityFeature)
     const [year, setYear] = useState('2005' as GenderEqualityYear)
+
+    useEffect(() => {
+        // Load initial data
+        if (!geoData) {
+            d3.json(url('/assets/custom.geo.json')).then(json => {
+                const mergedFeatures = json.features.map((feature: any) => {
+                    const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
+                    if (genderEqualityData[countryKey]) {
+                        return {
+                            ...feature,
+                            equalityData: genderEqualityData[countryKey],
+                        }
+                    }
+                    return feature
+                })
+                setGeoData({ features: mergedFeatures })
+            })
+        }
+    })
 
     const slideProps = { country, setCountry, year, setYear, feature, setFeature }
 
@@ -66,6 +99,8 @@ const PageWrapper = () => {
                             setSelected={setCountry}
                             selectedFeature={feature}
                             selectedYear={year}
+                            geoData={geoData}
+                            setGeoData={setGeoData}
                         />
                     </Col>
                     <Col md={14}>
@@ -73,7 +108,7 @@ const PageWrapper = () => {
                             <StyledContentContainer>
                                 <TransitionGroup>
                                     <CSSTransition key={slide} timeout={{ enter: 500, exit: 500 }} classNames={'fade'}>
-                                        <Section style={{padding:'2.5vw'}}>
+                                        <Section style={{ padding: '2.5vw' }}>
                                             {slide === 0 && <Slide1 {...slideProps} />}
                                             {slide === 1 && <Slide2 {...slideProps} />}
                                             {slide === 2 && <Slide3 {...slideProps} />}

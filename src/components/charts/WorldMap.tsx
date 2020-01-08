@@ -1,25 +1,20 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import * as d3 from 'd3'
 import classNames from 'classnames'
-import { url } from '../../utils/router'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import {
-    COLORSCALE,
-    genderEqualityData,
-    GenderEqualityFeature,
-    GenderEqualityYear,
-    getKey,
-    IGenderEqualityData,
-} from '../../data/dataset'
+import { COLORSCALE, GenderEqualityFeature, GenderEqualityYear, getKey } from '../../data/dataset'
+import { ICountry, IGeoData } from '../layout/PageWrapper'
 
 interface IWorldMap {
     selected: ICountry | null
     setSelected: (country: ICountry | null) => void
     selectedFeature: GenderEqualityFeature
     selectedYear: GenderEqualityYear
+    geoData: IGeoData | null
+    setGeoData: (geoData: IGeoData) => void
 }
 
 const StyledMap = styled.div`
@@ -46,9 +41,8 @@ const StyledMap = styled.div`
                 // filter: brightness(110%);
                 // fill:brightness(110%);
                 background-color: #000000;
-                opacity: 0.75
+                opacity: 0.75;
                 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
             }
         }
 
@@ -72,71 +66,39 @@ const StyledMap = styled.div`
     }
 `
 
-export interface ICountry {
-    properties: Record<string, string>
-    selected?: boolean
-    equalityData?: IGenderEqualityData
-}
-
-export interface IGeoData {
-    features: ICountry[]
-}
-
 const colorRange = (feature: GenderEqualityFeature) => {
     return COLORSCALE[feature]
 }
 
-export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear, ...props }: IWorldMap) => {
-    const [geoData, setGeoData] = useState(null as IGeoData | null)
+const mapText = {
+    gender_equality_index: 'GEI',
+    work: 'WORK',
+    money: 'MONEY',
+    knowledge: 'KNOWLEDGE',
+    time: 'TIME',
+    power: 'POWER',
+    health: 'HEALTH',
+}
+
+export const WorldMap = ({
+    selected,
+    setSelected,
+    selectedFeature,
+    selectedYear,
+    geoData,
+    setGeoData,
+    ...props
+}: IWorldMap) => {
     const [d3Container, width, height] = useResizableHook()
 
     const getFeature =
         selectedYear === 'growth'
-            ? (d: any) =>
-                d.equalityData &&
-                d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')]
-            : (d: any) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
-
-    // const featureKey = `${selectedFeature}_${selectedYear}` as keyof IGenderEqualityData
-
-    const findGradientColors = {
-        'gender_equality_index' : ['hsl(279, 0%, 100%)', 'hsl(279, 100%, 40%)'],
-        'work': ['hsl(317, 0%, 100%)', 'hsl(317, 100%, 35%)'],
-        'money': ['hsl(89, 0%, 100%)', 'hsl(89, 100%, 36%)'],
-        'knowledge': ['hsl(227, 0%, 100%)', 'hsl(227, 100%, 40%)'],
-        'time': ['hsl(26, 0%, 100%)', 'hsl(26, 100%, 50%)'],
-        'power': ['hsl(1, 0%, 100%)', 'hsl(1, 100%, 50%)'],
-        'health': ['hsl(52, 0%, 100%)', 'hsl(52, 100%, 48%)'],
-    }
-
-    const mapText = {
-        'gender_equality_index' : 'GEI',
-        'work': 'WORK',
-        'money': 'MONEY',
-        'knowledge': 'KNOWLEDGE',
-        'time': 'TIME',
-        'power': 'POWER',
-        'health': 'HEALTH',
-    }
-
-    useEffect(() => {
-        // Load initial data
-        d3.json(url('/assets/custom.geo.json')).then(json => {
-            if (!geoData) {
-                const mergedFeatures = json.features.map((feature: any) => {
-                    const countryKey = feature.properties.iso_a2 as keyof typeof genderEqualityData
-                    if (genderEqualityData[countryKey]) {
-                        return {
-                            ...feature,
-                            equalityData: genderEqualityData[countryKey],
-                        }
-                    }
-                    return feature
-                })
-                setGeoData({ features: mergedFeatures })
-            }
-        })
-    })
+            ? (d: ICountry) =>
+                  d.equalityData &&
+                  Math.round(
+                      d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
+                  )
+            : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     useEffect(() => {
         // Update selected
@@ -146,20 +108,20 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                 features: geoData.features.map((d: ICountry) =>
                     selected && d.properties.iso_a3 === selected.properties.iso_a3
                         ? {
-                            ...d,
-                            selected: true,
-                        }
+                              ...d,
+                              selected: true,
+                          }
                         : {
-                            ...d,
-                            selected: false,
-                        },
+                              ...d,
+                              selected: false,
+                          },
                 ),
             })
         }
     }, [selected])
 
     return (
-        <StyledMap ref={d3Container}>
+        <StyledMap ref={d3Container} id="worldmap">
             <D3Blackbox
                 x={0}
                 y={0}
@@ -178,38 +140,50 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .attr('x', 0)
                         .attr('y', 0)
 
-                    const infotext = svg.append('text')
+                    const infotext = svg
+                        .append('text')
                         .attr('x', 20)
                         .attr('y', 30)
                         .attr('fill', 'black')
                         .attr('font-weight', 'bold')
 
-                    const linearGradient = svg.append("defs")
-                        .append("linearGradient")
-                        .attr("id", "linear-gradient")
+                    const linearGradient = svg
+                        .append('defs')
+                        .append('linearGradient')
+                        .attr('id', 'linear-gradient')
 
                     linearGradient
-                        .attr("x1", "0%")
-                        .attr("y1", "0%")
-                        .attr("x2", "100%")
-                        .attr("y2", "0%");
+                        .attr('x1', '0%')
+                        .attr('y1', '0%')
+                        .attr('x2', '100%')
+                        .attr('y2', '0%')
 
-                    svg.append("rect")
-                        .attr("width", 150)
-                        .attr("height", 5)
-                        .style("fill", "url(#linear-gradient)")
+                    svg.append('rect')
+                        .attr('width', 150)
+                        .attr('height', 5)
+                        .style('fill', 'url(#linear-gradient)')
                         .attr('x', 20)
-                        .attr('y', 50);
+                        .attr('y', 50)
 
-                    const zeroText = svg.append('text').text('0')
+                    const zeroText = svg
+                        .append('text')
+                        .text('0')
                         .attr('x', 20)
                         .attr('y', 70)
                         .attr('fill', 'black')
 
-                    const hundText = svg.append('text').text('100')
+                    const hundText = svg
+                        .append('text')
+                        .text('100')
                         .attr('x', 150)
                         .attr('y', 70)
                         .attr('fill', 'black')
+
+                    const tooltip = d3
+                        .select('body')
+                        .append('div')
+                        .attr('class', 'tooltip')
+                        .style('opacity', 0)
 
                     setElement('rectangle', rectangle)
                     setElement('countriesGroup', countriesGroup)
@@ -217,14 +191,21 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                     setElement('linearGradient', linearGradient)
                     setElement('zeroText', zeroText)
                     setElement('hundText', hundText)
-
+                    setElement('tooltip', tooltip)
                 }}
-                render={(svg, data: IGeoData, { countriesGroup, rectangle, infotext, linearGradient }) => {
+                render={(
+                    svg,
+                    data: IGeoData,
+                    { countriesGroup, rectangle, infotext, linearGradient, tooltip, zeroText, hundText },
+                ) => {
                     if (!countriesGroup) {
                         return
                     }
 
-                    rectangle.attr('width', width).attr('height', height)
+                    rectangle
+                        .attr('width', width)
+                        .attr('height', height)
+                        .on('click', () => setSelected(null))
 
                     countriesGroup.attr('width', width).attr('height', height)
 
@@ -257,20 +238,48 @@ export const WorldMap = ({ selected, setSelected, selectedFeature, selectedYear,
                         .on('click', (d: ICountry) => {
                             if (d.equalityData) {
                                 setSelected(d)
+                            } else {
+                                setSelected(null)
                             }
                         })
-                    
-                    infotext.text(mapText[selectedFeature] + ' (' + selectedYear + ')');
-                    
-                    linearGradient.selectAll("*").remove();
+                        .on('mouseover', (d: ICountry) => {
+                            if (d.equalityData) {
+                                tooltip
+                                    .transition()
+                                    .duration(200)
+                                    .style('opacity', 0.9)
+                                tooltip
+                                    .html(
+                                        `${d.properties.name}<br /> ${selectedFeature}: <strong>${getFeature(
+                                            d,
+                                        )}</strong>`,
+                                    )
+                                    .style('left', d3.event.pageX + 'px')
+                                    .style('top', d3.event.pageY - 28 + 'px')
+                            }
+                        })
+                        .on('mouseout', (d: ICountry) => {
+                            tooltip
+                                .transition()
+                                .duration(500)
+                                .style('opacity', 0)
+                        })
 
-                    linearGradient.append("stop")
-                        .attr("offset", "0%")
-                        .attr("stop-color", findGradientColors[selectedFeature][0]);
+                    infotext.text(mapText[selectedFeature] + ' (' + selectedYear + ')')
+                    zeroText.text(d3.min(data.features, getFeature))
+                    hundText.text(d3.max(data.features, getFeature))
 
-                    linearGradient.append("stop")
-                        .attr("offset", "100%")
-                        .attr("stop-color", findGradientColors[selectedFeature][1]);
+                    linearGradient.selectAll('*').remove()
+
+                    linearGradient
+                        .append('stop')
+                        .attr('offset', '0%')
+                        .attr('stop-color', colorRange(selectedFeature)[0])
+
+                    linearGradient
+                        .append('stop')
+                        .attr('offset', '100%')
+                        .attr('stop-color', colorRange(selectedFeature)[4])
                 }}
             />
         </StyledMap>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
 import { countryCode, GenderEqualityFeature, GenderEqualityYear, getPropertiesAsArray } from '../../data/dataset'
 import * as d3 from 'd3'
-import { ICountry } from './WorldMap'
+import { ICountry } from '../layout/PageWrapper'
 
 interface ILoadingBarChart {
     year: GenderEqualityYear
@@ -84,7 +84,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                     xScale.range([0, innerWidth])
                     yScale.range([innerHeight, 0])
 
-                    group.selectAll("*").remove();
+                    group.selectAll('*').remove()
                     const barGroup = group.selectAll('.bar').data(data)
 
                     const bar = barGroup
@@ -109,7 +109,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                         })
                         .attr('height', yScale.bandwidth())
                         .attr('fill', (d: any) => d.color)
-                    
+
                     group
                         .append('g')
                         .attr('transform', `translate(0,${innerHeight})`)

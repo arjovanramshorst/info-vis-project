@@ -3,7 +3,7 @@ A- Arrow key navigation
 (DONE) R- Fix height of charts to viewport based
 
 # Worldmap:
-R- labels with index for country on hover
+(DONE) R- labels with index for country on hover
 (DONE) R- Legend for the worldmap (bottom right showing scale bands for each of the 5 colors?)
 (DONE) R- Title on top left showing: <FEATURE> - <YEAR/Growth>
 (DONE) R- Better hover effect (shader instead of white color?

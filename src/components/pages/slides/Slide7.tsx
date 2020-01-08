@@ -11,7 +11,10 @@ const Slide7: React.FunctionComponent<ISlide7> = ({ country, year, setYear, feat
         <SlideTitle>How big is the gender gap in the European Union?</SlideTitle>
         <SlideText>Play around with the data to see for yourself. Try clicking on a country.</SlideText>
         <YearSlider year={year} setYear={setYear} />
-        <SlideTitle> {country != null ? country.properties.name : 'EU'} ({year})</SlideTitle>
+        <SlideTitle>
+            {' '}
+            {country != null ? country.properties.name : 'EU'} ({year})
+        </SlideTitle>
         <LoadingBarChart year={year} setFeature={setFeature} country={country} />
     </React.Fragment>
 )

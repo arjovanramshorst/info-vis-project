@@ -18,10 +18,15 @@ const Slide3: React.FunctionComponent<ISlide3> = ({ setFeature, setYear, feature
     return (
         <div>
             <SlideTitle>Some countries are already doing great</SlideTitle>
-            <SlideText>These countries scored the highest
-                <span style={{margin:'5px'}}><FeatureSelect feature={feature} setFeature={setFeature}/></span>
+            <SlideText>
+                These countries scored the highest
+                <span style={{ margin: '5px' }}>
+                    <FeatureSelect feature={feature} setFeature={setFeature} />
+                </span>
                 rank in the year
-                <span style={{margin:'5px'}}><YearSelect year={year} setYear={setYear}/></span>
+                <span style={{ margin: '5px' }}>
+                    <YearSelect year={year} setYear={setYear} />
+                </span>
             </SlideText>
             <IndexBarChart sort={(a, b) => b.value - a.value} feature={feature} year={year} />
         </div>

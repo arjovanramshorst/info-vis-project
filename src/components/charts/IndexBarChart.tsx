@@ -20,6 +20,16 @@ const StyledIndexBarChart = styled.div`
     .background {
         fill: #f0f2f5; /* chart background colour */
     }
+    .bar {
+        &:hover {
+            // fill: #ffffff; /* hover colour */
+            // filter: brightness(110%);
+            // fill:brightness(110%);
+            background-color: #000000;
+            opacity: 0.75;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    }
 `
 
 const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature, year, from = 0, to = 100 }) => {
@@ -31,14 +41,14 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
-    const data = Object.keys(withoutEu)
+    const countryKeys = Object.keys(withoutEu) as Array<keyof typeof withoutEu>
+
+    const data = countryKeys
         .map(countryKey => ({
             key: countryKey,
             value:
                 year === 'growth'
-                    // @ts-ignore
                     ? withoutEu[countryKey][getKey(feature, '2015')] - withoutEu[countryKey][getKey(feature, '2005')]
-                    // @ts-ignore
                     : withoutEu[countryKey][getKey(feature, year)],
         }))
         .sort(sort)
@@ -50,7 +60,7 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                 y={0}
                 width={width}
                 height={height}
-                data={data.slice(0,10)}
+                data={data.slice(0, 10)}
                 init={(svg, setElement) => {
                     const background = svg
                         .append('g')
@@ -97,8 +107,8 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                     xScale.range([0, innerWidth]).domain(data.map(d => d.key))
                     yScale.range([innerHeight, 0])
 
-                    group.selectAll("*").remove();
-                    
+                    group.selectAll('*').remove()
+
                     const bar = group
                         .selectAll('.bar')
                         .data(data)
@@ -112,7 +122,7 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ sort, feature,
                         .attr('height', (d: any) => Math.abs(yScale(0) - yScale(d.value)))
                         .attr('width', xScale.bandwidth())
                         .attr('fill', COLORS[feature])
-                    
+
                     group
                         .append('g')
                         .attr('transform', `translate(0,${innerHeight})`)

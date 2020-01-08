@@ -1,7 +1,8 @@
 /*
 This file can contain the preprocessed data set so it can be used by d3 or whatever we choose.
  */
-import { ICountry } from '../components/charts/WorldMap'
+
+import { ICountry } from '../components/layout/PageWrapper'
 
 export interface IGenderEqualityData {
     gender_equality_index_2005: number

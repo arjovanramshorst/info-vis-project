@@ -1,5 +1,5 @@
 import { GenderEqualityFeature, GenderEqualityYear } from '../../../data/dataset'
-import { ICountry } from '../../charts/WorldMap'
+import { ICountry } from '../../layout/PageWrapper'
 
 export interface ISlideProps {
     setYear: (year: GenderEqualityYear) => void

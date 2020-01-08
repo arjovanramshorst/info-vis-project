@@ -10,6 +10,7 @@ const Slide1: React.FunctionComponent<ISlide1> = ({ setYear, setFeature }) => {
         setYear('2015')
         setFeature('gender_equality_index')
     }, [])
+
     return (
         <div>
             <SlideTitle>How big is the gender gap in the European Union?</SlideTitle>

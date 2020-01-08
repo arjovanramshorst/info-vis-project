@@ -29,7 +29,7 @@ const StyledMap = styled.div`
     }
 
     .country {
-        transition: fill 200ms ease-in-out;
+        transition: fill 200ms ease-in-out, stroke-width 200ms ease-in-out;
         //fill: #4b5358; /* country colour */
         stroke: #2a2c39; /* country border colour */
         stroke-width: 1; /* country border width */
@@ -47,9 +47,9 @@ const StyledMap = styled.div`
         }
 
         &.country-selected {
-            fill: rgb(101, 110, 99); /* country colour */
+            //fill: rgb(101, 110, 99); /* country colour */
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            border: 3px solid black;
+            stroke-width: 4;
         }
     }
 

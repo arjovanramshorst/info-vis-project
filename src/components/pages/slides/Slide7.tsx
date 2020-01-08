@@ -23,7 +23,7 @@ const Slide7: React.FunctionComponent<ISlide7> = ({ country, year, setYear, feat
                 {' '}
                 {country != null ? country.properties.name : 'EU'} ({year})
             </SlideTitle>
-            <LoadingBarChart year={year} setFeature={setFeature} country={country} />
+            <LoadingBarChart year={year} setFeature={setFeature} feature={feature} country={country} />
         </React.Fragment>
     )
 }

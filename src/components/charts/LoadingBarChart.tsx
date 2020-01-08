@@ -14,6 +14,7 @@ import { ICountry } from '../layout/PageWrapper'
 interface ILoadingBarChart {
     year: GenderEqualityYear
     setFeature: (feature: GenderEqualityFeature) => void
+    feature: GenderEqualityFeature
     country: ICountry | null
 }
 
@@ -35,10 +36,14 @@ const StyledLoadingBarChart = styled.div`
             opacity: 0.75;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
+        .rect {
+            stroke-width: 3;
+            transition: stroke 400ms ease-in-out
+        }
     }
 `
 
-const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, country, setFeature }) => {
+const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, country, setFeature, feature }) => {
     const [d3Container, width, height] = useResizableHook()
 
     const margin = { top: 25, right: 20, bottom: 50, left: 75 }
@@ -151,6 +156,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                         })
                         .attr('height', yScale.bandwidth())
                         .attr('fill', (d: any) => d.color)
+                        .attr('stroke', (d: any) => d.feature === feature ? 'rgba(0,0,0,0.75)' : d.color)
 
                     group
                         .append('g')

@@ -50,6 +50,10 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
+    if (year === 'reachEquality') {
+        return null
+    }
+
     const data = getPropertiesAsArray(countryCode(country), year).map(feature => ({
         key: feature.title,
         value:
@@ -91,10 +95,7 @@ const LoadingBarChart: React.FunctionComponent<ILoadingBarChart> = ({ year, coun
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
                     const tooltip = d3
-                        .select('body')
-                        .append('div')
-                        .attr('class', 'tooltip')
-                        .style('opacity', 0)
+                        .select('.tooltip')
 
                     setElement('tooltip', tooltip)
 

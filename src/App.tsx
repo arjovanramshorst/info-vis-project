@@ -80,14 +80,28 @@ export const Section = styled.section`
     }
 `
 
+const StyledTooltip = styled.div`
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0;
+    border-radius: 8px;
+    pointer-events: none;
+`
+
 const App: React.FC = () => {
     return (
-        <BrowserRouter basename={url('')}>
-            <RouterTransitionWrapper>
-                <Route exact path="/" component={Welcome} />
-                <Route exact path="/slides" component={PageWrapper} />
-            </RouterTransitionWrapper>
-        </BrowserRouter>
+        <React.Fragment>
+            <BrowserRouter basename={url('')}>
+                <RouterTransitionWrapper>
+                    <Route exact path="/" component={Welcome} />
+                    <Route exact path="/slides" component={PageWrapper} />
+                </RouterTransitionWrapper>
+            </BrowserRouter>
+            <StyledTooltip className={'tooltip'} style={{opacity: 0}} />
+        </React.Fragment>
     )
 }
 

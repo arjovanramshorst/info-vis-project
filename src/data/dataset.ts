@@ -37,7 +37,7 @@ export type GenderEqualityFeature =
     | 'power'
     | 'health'
 
-export type GenderEqualityYear = '2005' | '2010' | '2015' | 'growth'
+export type GenderEqualityYear = '2005' | '2010' | '2015' | 'growth' | 'reachEquality'
 
 export const COLORS: Record<GenderEqualityFeature, string> = {
     gender_equality_index: 'hsl(279, 100%, 40%)',
@@ -67,15 +67,6 @@ export const getKey = (feature: GenderEqualityFeature, year: GenderEqualityYear)
 
 export const countryCode = (country: ICountry | null) =>
     (country ? country.properties.iso_a2 : 'EU-28') as keyof typeof genderEqualityData
-
-export const countryCodeToName = (code: string, geoData: IGeoData) => {
-    const country = geoData.features.find(d => d.properties.iso_a2 === code)
-    if (country) {
-        return country.properties.name
-    }
-
-    return ''
-}
 
 export const getPropertiesAsArray = (country: keyof typeof genderEqualityData, year: GenderEqualityYear) => [
     {
@@ -137,10 +128,24 @@ export const getValuesForCountry = (feature: GenderEqualityFeature, country: key
         ...Array.from(Array(17).keys()).map(x => index['2015'] + (index['2015'] - index['2010']) * (x + 1)),
     ]
 
+
     return {
         index,
         growth: predictedGrowthKeys.map((key, index) => ({ key, value: predictedGrowthValues[index] })),
+        reachEquality: reachEquality(feature, country),
     }
+}
+
+export const reachEquality = (feature: GenderEqualityFeature, country: keyof typeof genderEqualityData) => {
+    // @ts-ignore
+    const index2015 = genderEqualityData[country][getKey(feature, 2015)]
+    // @ts-ignore
+    const index2010 = genderEqualityData[country][getKey(feature, 2010)]
+    if (index2015 - index2010 < 0) {
+        return undefined
+    }
+
+    return Math.round(((100 - index2015) / (index2015 - index2010) * 5) + 2015)
 }
 
 export const MAPTEXT = {

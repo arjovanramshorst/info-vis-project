@@ -6,9 +6,9 @@ import { ISlideProps } from './slides.interface'
 
 interface ISlide2 extends ISlideProps {}
 
-const Slide2: React.FunctionComponent<ISlide2> = ({ setYear, setFeature }) => {
+const Slide2: React.FunctionComponent<ISlide2> = ({ setYear, setFeature, countryCodeToCountry }) => {
     useEffect(() => {
-        setYear('2015')
+        setYear('reachEquality')
         setFeature('gender_equality_index')
     }, [])
 
@@ -20,7 +20,7 @@ const Slide2: React.FunctionComponent<ISlide2> = ({ setYear, setFeature }) => {
                 rate as it did between 2010 and 2015, the gender gap will not be closed until 2090 (60 years too late).
             </SlideText>
 
-            <GrowthChart />
+            <GrowthChart countryCodeToCountry={countryCodeToCountry}/>
         </div>
     )
 }

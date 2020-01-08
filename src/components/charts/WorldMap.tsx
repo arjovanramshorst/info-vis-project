@@ -5,7 +5,14 @@ import * as d3 from 'd3'
 import classNames from 'classnames'
 import { d3Path } from '../../utils/d3'
 import D3Blackbox, { useResizableHook } from '../layout/D3Blackbox'
-import { COLORSCALE, GenderEqualityFeature, GenderEqualityYear, getKey, MAPTEXT } from '../../data/dataset'
+import {
+    COLORSCALE, genderEqualityData,
+    GenderEqualityFeature,
+    GenderEqualityYear,
+    getKey,
+    MAPTEXT,
+    reachEquality,
+} from '../../data/dataset'
 import { ICountry, IGeoData } from '../layout/PageWrapper'
 
 interface IWorldMap {
@@ -89,7 +96,9 @@ export const WorldMap = ({
                   Math.round(
                       d.equalityData[getKey(selectedFeature, '2015')] - d.equalityData[getKey(selectedFeature, '2005')],
                   )
-            : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
+            : selectedYear === 'reachEquality'
+                ? (d: ICountry) => d.equalityData && reachEquality(selectedFeature, d.properties.iso_a2 as keyof typeof genderEqualityData)
+                : (d: ICountry) => d.equalityData && d.equalityData[getKey(selectedFeature, selectedYear)]
 
     useEffect(() => {
         // Update selected
@@ -171,10 +180,10 @@ export const WorldMap = ({
                         .attr('fill', 'black')
 
                     const tooltip = d3
-                        .select('body')
-                        .append('div')
-                        .attr('class', 'tooltip')
-                        .style('opacity', 0)
+                        .select('.tooltip')
+                        // .append('div')
+                        // .attr('class', 'tooltip')
+                        // .style('opacity', 0)
                     setElement('tooltip', tooltip)
 
                     setElement('rectangle', rectangle)
@@ -225,7 +234,7 @@ export const WorldMap = ({
                         .attr('class', (d: ICountry) =>
                             classNames('country', d.selected && 'country-selected', d.equalityData && 'selectable'),
                         )
-                        .attr('fill', (d: ICountry) => (d.equalityData ? color(getFeature(d)) : '#4b5358'))
+                        .attr('fill', (d: ICountry) => (d.equalityData ? (getFeature(d) ? color(getFeature(d)) : 'rgba(0,0,0,0.3') : '#4b5358'))
                         .on('click', (d: ICountry) => {
                             if (d.equalityData) {
                                 setSelected(d)
@@ -243,7 +252,7 @@ export const WorldMap = ({
                                     .html(
                                         `${d.properties.name} (${selectedYear})<br /> ${MAPTEXT[selectedFeature]}: <strong>${getFeature(
                                             d,
-                                        )}</strong>`,
+                                        ) || 'Negative growth'}</strong>`,
                                     )
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY - 28 + 'px')

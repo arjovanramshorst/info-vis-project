@@ -101,10 +101,10 @@ const IndexBarChart: React.FunctionComponent<IIndexBarChart> = ({ countryCodeToC
                     const axisLeft = group.append('g').call(d3.axisLeft(yScale))
 
                     const tooltip = d3
-                        .select('body')
-                        .append('div')
-                        .attr('class', 'tooltip')
-                        .style('opacity', 0)
+                        .select('.tooltip')
+                        // .append('div')
+                        // .attr('class', 'tooltip')
+                        // .style('opacity', 0)
 
                     setElement('tooltip', tooltip)
                     setElement('group', group)
